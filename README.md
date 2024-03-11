@@ -1,6 +1,8 @@
 # RepoGPT
 
 RepoGPT is an advanced tool designed to analyze code repositories, generating detailed and structured project summaries. Inspired by the gpt-repository-loader and gptrepo tools, RepoGPT makes it easy to understand the structure and components of a project, optimizing its integration with platforms like ChatGPT.
+![Example 1](repogpt/docs/example.png)
+![Example 2](repogpt/docs/example2.png)
 
 # Installing
 
@@ -54,11 +56,12 @@ RepoGPT allows you to customize the analysis using the following options:
 ```tap.
 ├── README.md
 ├── repogpt
-│ ├── docs
-│ │ ├── DESARROLLO.md   // testing purposes
-│ │ ├── IDEA.md         // resume
-│ │ └── TODO.md         // testing purposes
-│ ├── __init__.py
+│   ├── docs
+│   │   ├── DEVELOPING.md
+│   │   ├── IDEA.md
+│   │   └── TODO.md
+│   ├── __init__.py
+│   └── tree_build.py
 └── setup.py
 
 ```
