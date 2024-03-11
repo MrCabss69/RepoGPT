@@ -25,17 +25,22 @@ The result of the analysis with RepoGPT is structured as follows:
 To use RepoGPT, follow these steps:
 
 1. **Clone Repository:** Clone the repository containing the RepoGPT script to your local machine.
-  
+
 ```bash
- git clone https://github.com/MrCabss69/RepoGPT.git```
+git clone https://github.com/MrCabss69/RepoGPT.git
+```
 
 
 2. **Navigate to Directory:** Open a terminal or command line and navigate to the directory where the script is located.
 ```bash
- cd repoGPT```
+cd repoGPT
+```
   
 1. **Run the Script:** Run the script using Python, providing the necessary arguments as described in the flexible input features.
-```python3 run.py ```
+```bash
+python3 run.py
+```
+
 
 Code example:
 
