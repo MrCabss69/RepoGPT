@@ -1,30 +1,46 @@
 # RepoGPT
 
-RepoGPT is a tool based on: [gpt-repository-loader](https://github.com/mpoon/gpt-repository-loader) and [gptrepo](https://github.com/zackees/gptrepo), designed to generate fast and detailed summaries of projects or repositories. These summaries are optimized to be consumed directly by ChatGPT, making it easy to understand the project without the need for additional context.
+RepoGPT es una herramienta avanzada diseñada para analizar repositorios de código, generando resúmenes detallados y estructurados de los proyectos. Inspirada en las herramientas gpt-repository-loader y gptrepo, RepoGPT facilita la comprensión de la estructura y los componentes de un proyecto, optimizando su integración con plataformas como ChatGPT.
 
-## Characteristics
+## Características Principales
 
-- **File Analysis:** RepoGPT extracts detailed information from each file in the repository, including line counts, docstrings, classes with their independent methods and functions.
+- **Análisis de Archivos:** RepoGPT realiza un escaneo profundo de los archivos en el repositorio, recopilando información crucial como el conteo de líneas, las clases y sus métodos, funciones independientes y docstrings asociados.
+
+- **Documentación Mejorada:** La herramienta pone especial énfasis en la claridad y calidad de la documentación del código, promoviendo buenas prácticas como el uso de nomenclaturas claras para variables y docstrings detallados.
+
+
+## Opciones de Invocación Detalladas
+
+RepoGPT permite personalizar el análisis mediante las siguientes opciones:
+
+- `--repo_path`: Especifica el camino al repositorio a analizar. Por defecto, se utiliza el directorio actual.
   
+- `--extensions`: Define las extensiones de archivo a incluir en el análisis. Por defecto, se incluyen archivos .md.
   
-- **Improved Documentation:** Includes detailed docstrings for functions and clear variable nomenclature, which improves the readability and maintainability of the code.
-  
+- `--start_path`: Permite iniciar el análisis desde un subdirectorio específico del repositorio.
 
-## Output Structure
+**Ejemplo:**
 
-The result of the analysis with RepoGPT is structured as follows:
+```bash
+python3 run.py --repo_path /camino/al/repo --extensions .py .js --start_path src
+```
 
-- **Project Summary:** Includes the contents of key files such as README.md and IDEA.md, providing an immediate overview of the project.
-  
-- **Implementation Summary:** Technical details about the implementation are summarized in DEVELOPING.md, along with a project structure similar to the tree command, enhanced with the number of lines per file.
-  
-- **Summary of Each File:** The functionality of each file is included, extracting information from headers and docstrings, if available. Additionally, classes are named and functions are listed per class.
 
-## Use
+## Estructura de la Salida
 
-To use RepoGPT, follow these steps:
+RepoGPT organiza los resultados del análisis en una estructura clara y concisa, que incluye:
 
-1. **Clone Repository:** Clone the repository containing the RepoGPT script to your local machine.
+- **Resumen del Proyecto:** Presenta un vistazo general del proyecto a través del contenido de archivos clave como README.md y IDEA.md.
+
+- **Resumen de Implementación:** Detalla aspectos técnicos específicos en DEVELOPING.md y ofrece una visión estructurada del proyecto, similar al comando tree, enriquecida con detalles como el número de líneas por archivo.
+
+- **Análisis Detallado por Archivo:** Desglosa la funcionalidad de cada archivo, resaltando clases, métodos y docstrings relevantes.
+
+## Uso de RepoGPT
+
+Para empezar a utilizar RepoGPT, sigue estos sencillos pasos:
+
+1. **Clonar el Repositorio:**
 
 ```bash
 git clone https://github.com/MrCabss69/RepoGPT.git
