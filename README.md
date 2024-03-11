@@ -76,7 +76,3 @@ RepoGPT organizes the analysis results into a clear and concise structure, inclu
 - **Implementation Summary:** Details specific technical aspects in DEVELOPING.md and offers a structured view of the project, similar to the tree command, enriched with details such as the number of lines per file.
 
 - **Detailed Analysis per File:** Breaks down the functionality of each file, highlighting relevant classes, methods and docstrings.
-
-
-# All:
-Make a module for easy Python usage
