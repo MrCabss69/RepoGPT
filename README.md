@@ -2,15 +2,7 @@
 
 RepoGPT is an advanced tool designed to analyze code repositories, generating detailed and structured project summaries. Inspired by the gpt-repository-loader and gptrepo tools, RepoGPT makes it easy to understand the structure and components of a project, optimizing its integration with platforms like ChatGPT.
 
-**Example:**
-
-```tap
-python3 run.py --repo_path /path/to/repo --extensions .py .js --start_path src
-```
-
-
-# Using RepoGPT
-
+# Installing
 The project structure and usage process have been updated. Follow these steps to start using RepoGPT:
 
 ## Clone the Repository:
@@ -32,13 +24,21 @@ cd RepoGPT
 pip -e installation.
 ```
 
-## Run RepoGPT:
 
-Once installed, you can run RepoGPT directly from the command line, providing the necessary arguments as described above.
+# Using RepoGPT
+
+Once installed, you can go to the root directory of your project and exec in your terminal:
 
 ```tap
-repogpt --repo_path /path/to/repo --extensions .py .js --start_path src
+repogpt
 ```
+With some customization:
+```tap
+repogpt --repo_path /path_to_repo --extensions .py .js --start_path src
+```
+
+A .txt file will appear in the working directoy, with the summary generated.
+
 
 ## Main Features
 
