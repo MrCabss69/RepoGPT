@@ -1,6 +1,6 @@
 # RepoGPT
 
-RepoGPT is a tool designed to traverse code repositories, generating detailed and structured project summaries, based on README and other .md files, and the docstrings of the code. Inspired by the gpt-repository-loader and gptrepo.
+RepoGPT is a tool designed to traverse code repositories, generating detailed and structured project summaries, based on README and other .md files, and the docstrings of the code. Inspired by the [gpt-repository-loader](https://github.com/mpoon/gpt-repository-loader) and the fork [gptrepo](https://github.com/zackees/gptrepo/tree/main).
 ![Example](repogpt/docs/example.png)
 
 # Installing
