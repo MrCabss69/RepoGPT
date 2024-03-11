@@ -31,23 +31,22 @@ To start using RepoGPT, follow these simple steps:
 
 1. **Clone the Repository:**
 
-```bash
-git clone https://github.com/MrCabss69/RepoGPT.git
-```
+     ```bash
+     git clone https://github.com/MrCabss69/RepoGPT.git
+     ```
 
 
 2. **Navigate to Directory:** Open a terminal or command line and navigate to the directory where the script is located.
-```bash
-cd repoGPT
-```
+     ```bash
+     cd repoGPT
+     ```
   
 3. **Run the Script:** Run the script using Python, providing the necessary arguments as described in the flexible input features.
-```bash
-python3 run.py
-```
+     ```bash
+     python3 run.py
+     ```
 
-
-Code example:
+## Example
 
 ```python
 import argparse
