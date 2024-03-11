@@ -57,12 +57,12 @@ RepoGPT allows you to customize the analysis using the following options:
 # Structure
 ```tap.
 ├── README.md
-├── repoppt
-│ ├── documents
+├── repogpt
+│ ├── docs
 │ │ ├── DESARROLLO.md
 │ │ ├── IDEA.md
 │ │ └── TODO.md
 │ ├── __init__.py
-└── configuration.py
+└── setup.py
 
 ```
