@@ -1,35 +1,35 @@
 # RepoGPT
 
-RepoGPT es una herramienta avanzada diseñada para analizar repositorios de código, generando resúmenes detallados y estructurados de los proyectos. Inspirada en las herramientas gpt-repository-loader y gptrepo, RepoGPT facilita la comprensión de la estructura y los componentes de un proyecto, optimizando su integración con plataformas como ChatGPT.
+RepoGPT is an advanced tool designed to analyze code repositories, generating detailed and structured project summaries. Inspired by the gpt-repository-loader and gptrepo tools, RepoGPT makes it easier to understand the structure and components of a project, optimizing its integration with platforms such as ChatGPT.
 
-## Características Principales
+## Main Features
 
-- **Análisis de Archivos:** RepoGPT realiza un escaneo profundo de los archivos en el repositorio, recopilando información crucial como el conteo de líneas, las clases y sus métodos, funciones independientes y docstrings asociados.
+- **File Analysis:** RepoGPT performs a deep scan of the files in the repository, collecting crucial information such as line count, classes and their methods, independent functions and associated docstrings.
 
-- **Documentación Mejorada:** La herramienta pone especial énfasis en la claridad y calidad de la documentación del código, promoviendo buenas prácticas como el uso de nomenclaturas claras para variables y docstrings detallados.
+- **Improved Documentation:** The tool places special emphasis on the clarity and quality of code documentation, promoting good practices such as the use of clear nomenclatures for variables and detailed docstrings.
 
 
-## Opciones de Invocación Detalladas
+## Detailed Summon Options
 
-RepoGPT permite personalizar el análisis mediante las siguientes opciones:
+RepoGPT allows you to customize the analysis using the following options:
 
-- `--repo_path`: Especifica el camino al repositorio a analizar. Por defecto, se utiliza el directorio actual.
+- `--repo_path`: Specifies the path to the repository to analyze. By default, the current directory is used.
   
-- `--extensions`: Define las extensiones de archivo a incluir en el análisis. Por defecto, se incluyen archivos .md.
+- `--extensions`: Defines the file extensions to include in the analysis. By default, .md files are included.
   
-- `--start_path`: Permite iniciar el análisis desde un subdirectorio específico del repositorio.
+- `--start_path`: Allows you to start the analysis from a specific subdirectory of the repository.
 
-**Ejemplo:**
+**Example:**
 
 ```bash
-python3 run.py --repo_path /camino/al/repo --extensions .py .js --start_path src
+python3 run.py --repo_path /path/to/repo --extensions .py .js --start_path src
 ```
 
-## Uso de RepoGPT
+## Using RepoGPT
 
-Para empezar a utilizar RepoGPT, sigue estos sencillos pasos:
+To start using RepoGPT, follow these simple steps:
 
-1. **Clonar el Repositorio:**
+1. **Clone the Repository:**
 
 ```bash
 git clone https://github.com/MrCabss69/RepoGPT.git
@@ -54,30 +54,30 @@ import argparse
 from tree_builder import TreeBuilder
 
 def main():
-     # Script description and command line argument analysis
-     tree = TreeBuilder(args.repo_path, args.extensions, args.start_path)
-     repo_info = tree.build_tree()
-     output_file = "example.txt"
-     tree.write_output(repo_info, output_file)
-     print(f"Repository contents written to {output_file}")
+      # Script description and command line argument analysis
+      tree = TreeBuilder(args.repo_path, args.extensions, args.start_path)
+      repo_info = tree.build_tree()
+      output_file = "example.txt"
+      tree.write_output(repo_info, output_file)
+      print(f"Repository contents written to {output_file}")
 
 if __name__ == "__main__":
-     main()
+      main()
 ```
 
 The TreeBuilder class handles most of the analysis, including extracting information from files, analyzing classes and functions, and generating the project summary.
 
 
-## Estructura de la Salida
+## Output Structure
 
-RepoGPT organiza los resultados del análisis en una estructura clara y concisa, que incluye:
+RepoGPT organizes the analysis results into a clear and concise structure, including:
 
-- **Resumen del Proyecto:** Presenta un vistazo general del proyecto a través del contenido de archivos clave como README.md y IDEA.md.
+- **Project Summary:** Presents an overview of the project through the content of key files such as README.md and IDEA.md.
 
-- **Resumen de Implementación:** Detalla aspectos técnicos específicos en DEVELOPING.md y ofrece una visión estructurada del proyecto, similar al comando tree, enriquecida con detalles como el número de líneas por archivo.
+- **Implementation Summary:** Details specific technical aspects in DEVELOPING.md and offers a structured view of the project, similar to the tree command, enriched with details such as the number of lines per file.
 
-- **Análisis Detallado por Archivo:** Desglosa la funcionalidad de cada archivo, resaltando clases, métodos y docstrings relevantes.
+- **Detailed Analysis per File:** Breaks down the functionality of each file, highlighting relevant classes, methods and docstrings.
 
 
-# TODOs:
-Make a module for easy Python usage 
+# All:
+Make a module for easy Python usage
