@@ -1,6 +1,6 @@
-#RepoGPT
+# RepoGPT
 
-RepoGPT is a tool designed to generate fast and detailed summaries of projects or repositories. These summaries are optimized to be consumed directly by ChatGPT, making it easy to understand the project without the need for additional context.
+RepoGPT is a tool based on: [gpt-repository-loader](https://github.com/mpoon/gpt-repository-loader) and [gptrepo](https://github.com/zackees/gptrepo), designed to generate fast and detailed summaries of projects or repositories. These summaries are optimized to be consumed directly by ChatGPT, making it easy to understand the project without the need for additional context.
 
 ## Characteristics
 
@@ -49,3 +49,8 @@ if __name__ == "__main__":
 ```
 
 The TreeBuilder class handles most of the analysis, including extracting information from files, analyzing classes and functions, and generating the project summary.
+
+
+
+# TODOs:
+Make a module for easy Python usage 
