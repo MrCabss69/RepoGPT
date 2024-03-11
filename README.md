@@ -1,68 +1,68 @@
 # RepoGPT
 
-RepoGPT es una herramienta avanzada diseñada para analizar repositorios de código, generando resúmenes de proyectos detallados y estructurados. Inspirado en las herramientas gpt-repository-loader y gptrepo, RepoGPT facilita la comprensión de la estructura y los componentes de un proyecto, optimizando su integración con plataformas como ChatGPT.
+RepoGPT is an advanced tool designed to analyze code repositories, generating detailed and structured project summaries. Inspired by the gpt-repository-loader and gptrepo tools, RepoGPT makes it easy to understand the structure and components of a project, optimizing its integration with platforms like ChatGPT.
 
-**Ejemplo:**
+**Example:**
 
-```bash
-python3 run.py --repo_path /ruta/al/repo --extensions .py .js --start_path src
+```tap
+python3 run.py --repo_path /path/to/repo --extensions .py .js --start_path src
 ```
 
 
-# Uso de RepoGPT
+# Using RepoGPT
 
-La estructura del proyecto y el proceso de uso han sido actualizados. Sigue estos pasos para comenzar a utilizar RepoGPT:
+The project structure and usage process have been updated. Follow these steps to start using RepoGPT:
 
-## Clona el Repositorio:
+## Clone the Repository:
 
-```bash
+```tap
 git clone https://github.com/MrCabss69/RepoGPT.git
 ```
 
-## Navega al Directorio del Proyecto:
+## Navigate to the Project Directory:
 
-Abre una terminal o línea de comandos y navega al directorio raíz del proyecto clonado.
+Open a terminal or command line and navigate to the root directory of the cloned project.
 
-```bash
+```tap
 cd RepoGPT
 ```
 
-## Instala el módulo 
-```bash
-pip install -e .
+## Install the module
+```tap
+pip -e installation.
 ```
 
-## Ejecuta RepoGPT:
+## Run RepoGPT:
 
-Una vez instalado, puedes ejecutar RepoGPT directamente desde la línea de comandos, proporcionando los argumentos necesarios como se describió anteriormente.
+Once installed, you can run RepoGPT directly from the command line, providing the necessary arguments as described above.
 
-```bash
-repogpt --repo_path /ruta/al/repo --extensions .py .js --start_path src
+```tap
+repogpt --repo_path /path/to/repo --extensions .py .js --start_path src
 ```
 
-## Características Principales
+## Main Features
 
-- **Análisis de Archivos:** RepoGPT realiza un escaneo profundo de los archivos en el repositorio, recopilando información crucial como el conteo de líneas, las clases y sus métodos, funciones independientes y cadenas de documentación asociadas.
+- **File Analysis:** RepoGPT performs a deep scan of the files in the repository, collecting crucial information such as line count, classes and their methods, independent functions and associated docstrings.
 
-- **Mejora de Documentación:** La herramienta pone especial énfasis en la claridad y calidad de la documentación del código, promoviendo buenas prácticas como el uso de nomenclaturas claras para variables y cadenas de documentación detalladas.
+- **Documentation Improvement:** The tool places special emphasis on the clarity and quality of code documentation, promoting good practices such as the use of clear nomenclatures for variables and detailed documentation strings.
 
-## Opciones de Análisis Detallado
+## Detailed Analysis Options
 
-RepoGPT te permite personalizar el análisis utilizando las siguientes opciones:
+RepoGPT allows you to customize the analysis using the following options:
 
-- `--repo_path`: Especifica la ruta del repositorio a analizar. Por defecto, se utiliza el directorio actual.
-- `--extensions`: Define las extensiones de archivo a incluir en el análisis. Por defecto, se incluyen archivos .md.
-- `--start_path`: Permite iniciar el análisis desde un subdirectorio específico del repositorio.
+- `--repo_path`: Specifies the path of the repository to analyze. By default, the current directory is used.
+- `--extensions`: Defines the file extensions to include in the analysis. By default, .md files are included.
+- `--start_path`: Allows you to start the analysis from a specific subdirectory of the repository.
 
-# Estructura
-```bash.
+# Structure
+```tap.
 ├── README.md
-├── repogpt
-│   ├── docs
-│   │   ├── DEVELOPING.md
-│   │   ├── IDEA.md
-│   │   └── TODO.md
-│   ├── __init__.py
-└── setup.py
+├── repoppt
+│ ├── documents
+│ │ ├── DESARROLLO.md
+│ │ ├── IDEA.md
+│ │ └── TODO.md
+│ ├── __init__.py
+└── configuration.py
 
 ```
