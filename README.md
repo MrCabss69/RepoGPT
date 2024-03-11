@@ -41,7 +41,7 @@ git clone https://github.com/MrCabss69/RepoGPT.git
 cd repoGPT
 ```
   
-1. **Run the Script:** Run the script using Python, providing the necessary arguments as described in the flexible input features.
+3. **Run the Script:** Run the script using Python, providing the necessary arguments as described in the flexible input features.
 ```bash
 python3 run.py
 ```
