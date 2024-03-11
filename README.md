@@ -25,17 +25,6 @@ RepoGPT permite personalizar el análisis mediante las siguientes opciones:
 python3 run.py --repo_path /camino/al/repo --extensions .py .js --start_path src
 ```
 
-
-## Estructura de la Salida
-
-RepoGPT organiza los resultados del análisis en una estructura clara y concisa, que incluye:
-
-- **Resumen del Proyecto:** Presenta un vistazo general del proyecto a través del contenido de archivos clave como README.md y IDEA.md.
-
-- **Resumen de Implementación:** Detalla aspectos técnicos específicos en DEVELOPING.md y ofrece una visión estructurada del proyecto, similar al comando tree, enriquecida con detalles como el número de líneas por archivo.
-
-- **Análisis Detallado por Archivo:** Desglosa la funcionalidad de cada archivo, resaltando clases, métodos y docstrings relevantes.
-
 ## Uso de RepoGPT
 
 Para empezar a utilizar RepoGPT, sigue estos sencillos pasos:
@@ -78,6 +67,16 @@ if __name__ == "__main__":
 
 The TreeBuilder class handles most of the analysis, including extracting information from files, analyzing classes and functions, and generating the project summary.
 
+
+## Estructura de la Salida
+
+RepoGPT organiza los resultados del análisis en una estructura clara y concisa, que incluye:
+
+- **Resumen del Proyecto:** Presenta un vistazo general del proyecto a través del contenido de archivos clave como README.md y IDEA.md.
+
+- **Resumen de Implementación:** Detalla aspectos técnicos específicos en DEVELOPING.md y ofrece una visión estructurada del proyecto, similar al comando tree, enriquecida con detalles como el número de líneas por archivo.
+
+- **Análisis Detallado por Archivo:** Desglosa la funcionalidad de cada archivo, resaltando clases, métodos y docstrings relevantes.
 
 
 # TODOs:
