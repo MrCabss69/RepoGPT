@@ -10,17 +10,14 @@ RepoGPT is an advanced tool designed to analyze code repositories, generating de
 git clone https://github.com/MrCabss69/RepoGPT.git
 ```
 
-## Navigate to the Project Directory:
-
-Open a terminal or command line and navigate to the root directory of the cloned project.
-
+## Navigate to the Project Directory
 ```tap
 cd RepoGPT
 ```
 
 ## Install the module
 ```tap
-pip -e installation.
+pip install -e .
 ```
 
 
