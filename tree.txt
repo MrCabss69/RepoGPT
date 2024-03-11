@@ -1,0 +1,155 @@
+---- PROJECT SUMMARY ----
+
+README.md:
+# RepoGPT
+
+RepoGPT es una herramienta diseñada para generar resúmenes rápidos y detallados de proyectos o repositorios. Estos resúmenes están optimizados para ser consumidos directamente por ChatGPT, facilitando la comprensión del proyecto sin necesidad de contexto adicional.
+
+## Características
+
+- **Análisis de Archivos:** RepoGPT extrae información detallada de cada archivo en el repositorio, incluyendo el conteo de líneas, docstrings, clases con sus métodos y funciones independientes.
+  
+  
+- **Documentación Mejorada:** Incluye docstrings detallados para las funciones y una nomenclatura clara de las variables, lo que mejora la legibilidad y mantenibilidad del código.
+  
+
+## Estructura del Output
+
+El resultado del análisis con RepoGPT se estructura de la siguiente manera:
+
+- **Resumen del Proyecto:** Incluye los contenidos de archivos clave como README.md y IDEA.md, proporcionando una visión general inmediata del proyecto.
+  
+- **Resumen de la Implementación:** Detalles técnicos acerca de la implementación se resumen en DEVELOPING.md, junto con una estructura del proyecto similar al comando tree, mejorada con el número de líneas por archivo.
+  
+- **Resumen de Cada Archivo:** Se incluye la funcionalidad de cada archivo, extrayendo la información de los encabezados y los docstrings, si están disponibles. Además, se nombran las clases y se enumeran las funciones por clase.
+
+## Uso
+
+Para utilizar RepoGPT, sigue estos pasos:
+
+1. **Clonar el Repositorio:** Clona el repositorio que contiene el script de RepoGPT en tu máquina local.
+  
+2. **Navegar al Directorio:** Abre una terminal o línea de comandos y navega al directorio donde se encuentra el script.
+  
+3. **Ejecutar el Script:** Ejecuta el script utilizando Python, proporcionando los argumentos necesarios como se describe en las características de entrada flexible.
+
+Ejemplo de código:
+
+```python
+import argparse
+import os
+from tree_builder import TreeBuilder
+
+def main():
+    # Descripción del script y análisis de argumentos de la línea de comandos
+    tree = TreeBuilder(args.repo_path, args.extensions, args.start_path)
+    repo_info = tree.build_tree()
+    output_file = "output.txt"
+    tree.write_output(repo_info, output_file)
+    print(f"Repository contents written to {output_file}")
+
+if __name__ == "__main__":
+    main()
+```
+
+La clase TreeBuilder se encarga de la mayor parte del análisis, incluyendo la extracción de información de archivos, el análisis de clases y funciones, y la generación del resumen del proyecto.
+
+IDEA.md:
+# RepoGPT
+
+Generación rápida de resumenes de proyectos o repositorios, apta para consumir por chatgpt, sin necesidad de contexto adicional
+
+ESTRUCTURA DEL OUTPUT:
+
+1. RESUMEN DEL PROYECTO - README.MD / IDEA.MD 
+2. RESUMEN DE LA IMPLEMENTACION - DEVELPING.md, ESTRUCTURA DEL PROYECTO (comando tree mejorado, con numero de líneas por archivo), 
+3. RESUMEN DE CADA FICHERO: funcionalidad (extraer de : header + los docstrings si hay), y nombrar las clases  y las funciones por clase.
+
+File Analysis - core.py:
+Line Count: 29
+
+Standalone Functions:
+Function: main
+Docstring: Ejecuta el script de análisis del repositorio: analiza los argumentos de la línea de comandos, procesa el repositorio y escribe la salida.
+
+----------------------------------------
+File Analysis - IDEA.md:
+Line Count: 10
+
+File Analysis - README.md:
+Line Count: 53
+
+Standalone Functions:
+Function: main
+Docstring: 
+
+----------------------------------------
+File Analysis - tree_builder.py:
+Line Count: 177
+
+Classes and Methods:
+Class: TreeBuilder
+  - Method: __init__
+Docstring: Inicializa el analizador de repositorio con la ruta del repositorio, extensiones de archivo válidas y la ruta de inicio.
+
+        Parámetros:
+            repo_path (str): La ruta al repositorio que será analizado.
+            valid_extensions (list): Una lista de las extensiones de archivo válidas para el análisis.
+            start_path (str, opcional): La subruta dentro del repositorio desde donde comenzar el análisis.
+
+  - Method: extract_file_info
+Docstring: Extrae información detallada de un archivo, incluyendo el recuento de líneas, clases con sus métodos y funciones independientes.
+
+        Parámetros:
+            file_path (str): La ruta al archivo del que se extraerá la información.
+
+        Retorna:
+            dict: Un diccionario con el recuento de líneas, clases (y sus métodos) y funciones.
+
+  - Method: extract_classes
+Docstring: Extrae información sobre las clases y sus métodos del contenido proporcionado.
+
+        Parámetros:
+            content (str): El contenido del archivo del que se extraerán las clases y métodos.
+
+        Retorna:
+            dict: Un diccionario de clases, cada una con sus respectivos métodos y docstrings.
+
+  - Method: extract_functions
+Docstring: Extrae información sobre funciones independientes del contenido proporcionado.
+
+        Parámetros:
+            content (str): El contenido del archivo del que se extraerán las funciones.
+
+        Retorna:
+            dict: Un diccionario de funciones y sus respectivos docstrings.
+
+  - Method: extract_docstring
+Docstring: Extrae el docstring inmediatamente siguiente en el contenido proporcionado.
+
+        Parámetros:
+            content (str): El contenido del que se extraerá el docstring.
+
+        Retorna:
+            str: El docstring encontrado o una cadena vacía si no se encuentra ninguno.
+
+  - Method: summarize_project_documents
+Docstring: Resumen de los documentos clave del proyecto, como README.md, IDEA.md y DEVELOPING.md.
+
+        Retorna:
+            dict: Un diccionario con los nombres de los documentos como claves y sus contenidos como valores.
+
+  - Method: build_tree
+Docstring: Procesa el repositorio analizando los archivos que coinciden con las extensiones especificadas y resume los documentos del proyecto.
+
+        Retorna:
+            dict: Un diccionario con información detallada de cada archivo procesado y resúmenes de los documentos del proyecto.
+
+  - Method: write_output
+Docstring: Escribe los resultados del análisis en un archivo de salida en formato de texto.
+
+        Parámetros:
+            repo_info (dict): Los resultados del análisis de cada archivo procesado y los resúmenes de los documentos del proyecto.
+            output_file (str): La ruta al archivo de salida donde se escribirán los resultados.
+
+
