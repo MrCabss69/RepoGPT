@@ -1,0 +1,193 @@
+---- PROJECT SUMMARY ----
+
+File Analysis - README.md:
+Line Count: N/A
+
+Document Content:
+# RepoGPT
+
+RepoGPT is an advanced tool designed to analyze code repositories, generating detailed and structured project summaries. Inspired by the gpt-repository-loader and gptrepo tools, RepoGPT makes it easy to understand the structure and components of a project, optimizing its integration with platforms like ChatGPT.
+
+# Installing
+
+## Clone the Repository:
+
+```tap
+git clone https://github.com/MrCabss69/RepoGPT.git
+```
+
+## Navigate to the Project Directory
+```tap
+cd RepoGPT
+```
+
+## Install the module
+```tap
+pip install -e .
+```
+
+
+# Using RepoGPT
+
+Once installed, you can go to the root directory of your project and exec in your terminal:
+
+```tap
+repogpt
+```
+With some customization:
+```tap
+repogpt --repo_path /path_to_repo --extensions .py .js --start_path src
+```
+
+A .txt file will appear in the working directoy, with the summary generated.
+
+
+## Main Features
+
+- **File Analysis:** RepoGPT performs a deep scan of the files in the repository, collecting crucial information such as line count, classes and their methods, independent functions and associated docstrings.
+
+- **Documentation Improvement:** The tool places special emphasis on the clarity and quality of code documentation, promoting good practices such as the use of clear nomenclatures for variables and detailed documentation strings.
+
+## Detailed Analysis Options
+
+RepoGPT allows you to customize the analysis using the following options:
+
+- `--repo_path`: Specifies the path of the repository to analyze. By default, the current directory is used.
+- `--extensions`: Defines the file extensions to include in the analysis. By default, .md files are included.
+- `--start_path`: Allows you to start the analysis from a specific subdirectory of the repository.
+
+# Structure
+```tap.
+├── README.md
+├── repogpt
+│ ├── docs
+│ │ ├── DESARROLLO.md   // testing purposes
+│ │ ├── IDEA.md         // resume
+│ │ └── TODO.md         // testing purposes
+│ ├── __init__.py
+└── setup.py
+
+```
+
+----------------------------------------
+File Analysis - repogpt/tree_build.py:
+Line Count: 152
+
+Classes and Methods:
+Class: TreeBuilder
+ - Method: __init__
+Docstring: Initialize the TreeBuilder with the given repository path, valid extensions for files to analyze, and an optional starting path.
+
+        Args:
+        repo_path (str): The root path of the repository to analyze.
+        valid_extensions (list): File extensions to include in the analysis.
+        start_path (str, optional): Subpath within the repository from where to start the analysis.
+
+ - Method: build_tree
+Docstring: Build a tree structure representing the repository, including information from code files and markdown documents.
+
+        Returns:
+        dict: A dictionary representing the structure and content of the repository.
+
+ - Method: process_directory
+Docstring: Recursively process each file and subdirectory in the given directory.
+
+        Args:
+        directory (str): The directory to process.
+
+        Returns:
+        dict: Information about the processed files and subdirectories.
+
+ - Method: extract_file_info
+Docstring: Extract information from a single file, such as line count and, if applicable, classes, methods, and their docstrings.
+
+        Args:
+        file_path (str): The path to the file from which to extract information.
+
+        Returns:
+        dict: A dictionary containing the extracted information.
+
+ - Method: extract_classes
+Docstring: Extract classes or functions and their docstrings from the content.
+
+        Args:
+        content (str): The content from which to extract information.
+        definition_type (str): The type of definition to extract ('class' or 'def').
+
+        Returns:
+        dict: A dictionary of extracted definitions with their docstrings.
+
+ - Method: extract_definitions
+Docstring: Extract classes or functions and their docstrings from the content.
+
+        Args:
+        content (str): The content from which to extract information.
+        definition_type (str): The type of definition to extract ('class' or 'def').
+
+        Returns:
+        dict: A dictionary of extracted definitions with their docstrings.
+
+ - Method: _get_block_content
+Docstring: Extract the content of a block (e.g., class or function body) starting from a given position.
+
+        Args:
+        content (str): The full content containing the block.
+        start_pos (int): The start position of the block in the content.
+
+        Returns:
+        str: The extracted block content.
+
+ - Method: write_output
+Docstring: Write the analysis results to a specified output file.
+
+        Args:
+        repo_info (dict): The analysis results to write.
+        output_file (str): The path to the output file.
+
+Standalone Functions:
+----------------------------------------
+File Analysis - repogpt/__init__.py:
+Line Count: 30
+
+Classes and Methods:
+Standalone Functions:
+Function: main
+Docstring: Execute the repository analysis script: Parses command line arguments, processes the repository, and writes the output.
+
+----------------------------------------
+File Analysis - repogpt/docs/IDEA.md:
+Line Count: N/A
+
+Document Content:
+# RepoGPT
+
+Quick generation of project or repository summaries, suitable for consumption by chatgpt, without the need for additional context
+
+OUTPUT STRUCTURE:
+
+1. PROJECT SUMMARY - README.MD / IDEA.MD
+2. IMPLEMENTATION SUMMARY - DEVELPING.md, PROJECT STRUCTURE (improved tree command, with number of lines per file),
+3. SUMMARY OF EACH FILE: functionality (extract from: header + docstrings if any), and name the classes and functions by class.
+
+----------------------------------------
+File Analysis - repogpt/docs/TODO.md:
+Line Count: N/A
+
+Document Content:
+# TODOs
+PRITEAR LA ESTRUCTURA DEL REPOSITORIO CON EL COMANDO TREE AL COMIEZO EL OUTPUT DE TEXTO
+
+----------------------------------------
+File Analysis - repogpt/docs/DEVELOPING.md:
+Line Count: N/A
+
+Document Content:
+ey!
+
+----------------------------------------
+File Analysis - setup.py:
+Line Count: 23
+
+Classes and Methods:
+Standalone Functions:
+----------------------------------------
