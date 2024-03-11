@@ -40,7 +40,7 @@ def main():
      # Script description and command line argument analysis
      tree = TreeBuilder(args.repo_path, args.extensions, args.start_path)
      repo_info = tree.build_tree()
-     output_file = "output.txt"
+     output_file = "example.txt"
      tree.write_output(repo_info, output_file)
      print(f"Repository contents written to {output_file}")
 

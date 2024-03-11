@@ -1,0 +1,159 @@
+---- PROJECT SUMMARY ----
+
+README.md:
+# RepoGPT
+
+RepoGPT is a tool based on: [gpt-repository-loader](https://github.com/mpoon/gpt-repository-loader) and [gptrepo](https://github.com/zackees/gptrepo), designed to generate fast and detailed summaries of projects or repositories. These summaries are optimized to be consumed directly by ChatGPT, making it easy to understand the project without the need for additional context.
+
+## Characteristics
+
+- **File Analysis:** RepoGPT extracts detailed information from each file in the repository, including line counts, docstrings, classes with their independent methods and functions.
+  
+  
+- **Improved Documentation:** Includes detailed docstrings for functions and clear variable nomenclature, which improves the readability and maintainability of the code.
+  
+
+## Output Structure
+
+The result of the analysis with RepoGPT is structured as follows:
+
+- **Project Summary:** Includes the contents of key files such as README.md and IDEA.md, providing an immediate overview of the project.
+  
+- **Implementation Summary:** Technical details about the implementation are summarized in DEVELOPING.md, along with a project structure similar to the tree command, enhanced with the number of lines per file.
+  
+- **Summary of Each File:** The functionality of each file is included, extracting information from headers and docstrings, if available. Additionally, classes are named and functions are listed per class.
+
+## Use
+
+To use RepoGPT, follow these steps:
+
+1. **Clone Repository:** Clone the repository containing the RepoGPT script to your local machine.
+  
+2. **Navigate to Directory:** Open a terminal or command line and navigate to the directory where the script is located.
+  
+3. **Run the Script:** Run the script using Python, providing the necessary arguments as described in the flexible input features.
+
+Code example:
+
+```python
+import argparse
+from tree_builder import TreeBuilder
+
+def main():
+     # Script description and command line argument analysis
+     tree = TreeBuilder(args.repo_path, args.extensions, args.start_path)
+     repo_info = tree.build_tree()
+     output_file = "example.txt"
+     tree.write_output(repo_info, output_file)
+     print(f"Repository contents written to {output_file}")
+
+if __name__ == "__main__":
+     main()
+```
+
+The TreeBuilder class handles most of the analysis, including extracting information from files, analyzing classes and functions, and generating the project summary.
+
+
+
+# TODOs:
+Make a module for easy Python usage
+
+IDEA.md:
+# RepoGPT
+
+Quick generation of project or repository summaries, suitable for consumption by chatgpt, without the need for additional context
+
+OUTPUT STRUCTURE:
+
+1. PROJECT SUMMARY - README.MD / IDEA.MD
+2. IMPLEMENTATION SUMMARY - DEVELPING.md, PROJECT STRUCTURE (improved tree command, with number of lines per file),
+3. SUMMARY OF EACH FILE: functionality (extract from: header + docstrings if any), and name the classes and functions by class.
+
+File Analysis - core.py:
+Line Count: 29
+
+Standalone Functions:
+Function: main
+Docstring: Ejecuta el script de análisis del repositorio: analiza los argumentos de la línea de comandos, procesa el repositorio y escribe la salida.
+
+----------------------------------------
+File Analysis - IDEA.md:
+Line Count: 9
+
+File Analysis - README.md:
+Line Count: 56
+
+Standalone Functions:
+Function: main
+Docstring: 
+
+----------------------------------------
+File Analysis - tree_builder.py:
+Line Count: 176
+
+Classes and Methods:
+Class: TreeBuilder
+ - Method: __init__
+Docstring: Initializes the repository parser with the repository path, valid file extensions, and the home path.
+
+        Parameters:
+            repo_path (str): The path to the repository that will be analyzed.
+            valid_extensions (list): A list of valid file extensions for scanning.
+            start_path (str, optional): The subpath within the repository from which to start the analysis.
+
+ - Method: extract_file_info
+Docstring: Extracts detailed information from a file, including line count, classes with their methods, and independent functions.
+
+        Parameters:
+            file_path (str): The path to the file from which the information will be extracted.
+
+        Returns:
+            dict: A dictionary with the count of lines, classes (and their methods) and functions.
+
+ - Method: extract_classes
+Docstring: Extracts information about classes and their methods from the provided content.
+
+        Parameters:
+            content (str): The content of the file from which the classes and methods will be extracted.
+
+        Returns:
+            dict: A dictionary of classes, each with their respective methods and docstrings.
+
+ - Method: extract_functions
+Docstring: Extracts information about independent functions from the provided content.
+
+        Parameters:
+            content (str): The content of the file from which the functions will be extracted.
+
+        Returns:
+            dict: A dictionary of functions and their respective docstrings.
+
+ - Method: extract_docstring
+Docstring: Extracts the docstring immediately following the given content.
+
+        Parameters:
+            content (str): The content from which the docstring will be extracted.
+
+        Returns:
+            str: The found docstring or an empty string if none are found.
+
+ - Method: summarize_project_documents
+Docstring: Summary of key project documents, such as README.md, IDEA.md, and DEVELOPING.md.
+
+        Returns:
+            dict: A dictionary with document names as keys and their contents as values.
+
+ - Method: build_tree
+Docstring: Processes the repository by parsing files that match the specified extensions and summarizes the project documents.
+
+        Returns:
+            dict: A dictionary with detailed information about each processed file and summaries of project documents.
+
+ - Method: write_output
+Docstring: Writes the analysis results to an output file in text format.
+
+        Parameters:
+            repo_info (dict): The results of the analysis of each processed file and the summaries of the project documents.
+            output_file (str): The path to the output file where the results will be written.
+
+
