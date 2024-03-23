@@ -50,7 +50,7 @@ A .txt file will appear in the working directoy, with the summary generated.
 
 RepoGPT allows you to customize the analysis using the following options:
 
-- `--output`: Defines the file name and extension to output in the analysis. By default, 'example.txt' file are created.
+- `--output`: Defines the file name and extension to output in the analysis. By now .txt and .json formats are accepted. By default, 'example.txt' file are created.
 
 # Structure
 ```tap.
