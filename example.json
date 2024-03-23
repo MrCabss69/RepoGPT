@@ -1,0 +1,69 @@
+{
+    "README.md": {
+        "__type__": "file",
+        "content": "# RepoGPT\n\nRepoGPT is a tool designed to summarize the  code (*.py) and docs (*.md) files in a repository. It works iterating through directories and generating detailed and structured project summaries - including classes, functions and and the docstrings. It supports .txt or .json output files, ready for your favourite LLM to ingest!\n\nInspired by the [gpt-repository-loader](https://github.com/mpoon/gpt-repository-loader) and [gptrepo](https://github.com/zackees/gptrepo/tree/main).\n\n![Example](repogpt/docs/example.png)\n\n# Installing\n\n## Clone the Repository:\n\n```tap\ngit clone https://github.com/MrCabss69/RepoGPT.git\n```\n\n## Navigate to the Project Directory\n```tap\ncd RepoGPT\n```\n\n## Install the module\n```tap\npip install -e .\n```\n\n\n# Using RepoGPT\n\nOnce installed, you can go to the root directory of your project and exec in your terminal:\n\n```tap\nrepogpt\n```\nWith some customization:\n```tap\nrepogpt --repo_path /path_to_repo --extensions .py .js --start_path src\n```\n\nA .txt file will appear in the working directoy, with the summary generated.\n\n\n## Main Features\n\n- **File Analysis:** RepoGPT performs a deep scan of the files in the repository, collecting crucial information such as line count, classes and their methods, independent functions and associated docstrings.\n\n- **Documentation Improvement:** The tool places special emphasis on the clarity and quality of code documentation, promoting good practices such as the use of clear nomenclatures for variables and detailed documentation strings.\n\n## Detailed Analysis Options\n\nRepoGPT allows you to customize the analysis using the following options:\n\n- `--output`: Defines the file name and extension to output in the analysis. By now .txt and .json formats are accepted. By default, 'example.txt' file are created.\n\n# Structure\n```tap.\n\u251c\u2500\u2500 README.md\n\u251c\u2500\u2500 repogpt\n\u2502   \u251c\u2500\u2500 docs\n\u2502   \u2502   \u251c\u2500\u2500 DEVELOPING.md\n\u2502   \u2502   \u251c\u2500\u2500 IDEA.md\n\u2502   \u2502   \u2514\u2500\u2500 TODO.md\n\u2502   \u251c\u2500\u2500 __init__.py\n\u2502   \u2514\u2500\u2500 tree_build.py\n\u2514\u2500\u2500 setup.py\n\n```"
+    },
+    "repogpt": {
+        "repogpt/tree_build.py": {
+            "classes": [
+                {
+                    "name": "TreeBuilder",
+                    "docstring": null,
+                    "methods": [
+                        {
+                            "name": "__init__",
+                            "docstring": "Inicializa el TreeBuilder con la ruta del repositorio, extensiones v\u00e1lidas y un path de inicio opcional.\n\n:param repo_path: Ruta absoluta al repositorio.\n:param valid_extensions: Lista de extensiones de archivo para incluir en el an\u00e1lisis.\n:param start_path: Ruta dentro del repositorio desde donde comenzar el an\u00e1lisis."
+                        },
+                        {
+                            "name": "is_excluded",
+                            "docstring": "Determina si una ruta dada debe ser excluida del an\u00e1lisis bas\u00e1ndose en los patrones de exclusi\u00f3n.\n\n:param path: Ruta del archivo o directorio a verificar.\n:return: True si la ruta debe ser excluida, False en caso contrario."
+                        },
+                        {
+                            "name": "build_tree",
+                            "docstring": "Construye la estructura del \u00e1rbol del repositorio comenzando desde la ruta de inicio.\n\n:return: Diccionario representando la estructura del repositorio."
+                        },
+                        {
+                            "name": "process_directory",
+                            "docstring": "Procesa de manera recursiva cada directorio y archivo en el directorio dado, extrayendo la informaci\u00f3n relevante.\n\n:param directory: Ruta del directorio a procesar.\n:return: Diccionario con la informaci\u00f3n del directorio y sus contenidos."
+                        },
+                        {
+                            "name": "extract_file_info",
+                            "docstring": "Extrae informaci\u00f3n de un archivo individual, incluyendo el recuento de l\u00edneas y, para archivos .py, clases y funciones.\n\n:param file_path: Ruta al archivo del cual extraer informaci\u00f3n.\n:return: Diccionario con la informaci\u00f3n extra\u00edda del archivo."
+                        },
+                        {
+                            "name": "parse_python_content",
+                            "docstring": "Analiza el contenido de un archivo Python para extraer clases, funciones y sus docstrings.\n\n:param content: Contenido del archivo Python.\n:return: Diccionario con las clases y funciones extra\u00eddas del contenido."
+                        },
+                        {
+                            "name": "handle_class_node",
+                            "docstring": "Extrae informaci\u00f3n de un nodo de clase del AST, incluyendo m\u00e9todos y docstrings.\n\n:param node: Nodo AST de la clase.\n:return: Diccionario con el nombre de la clase, su docstring y sus m\u00e9todos."
+                        },
+                        {
+                            "name": "handle_function_node",
+                            "docstring": "Extrae informaci\u00f3n de un nodo de funci\u00f3n del AST, incluyendo su nombre y docstring.\n\n:param node: Nodo AST de la funci\u00f3n.\n:return: Diccionario con el nombre de la funci\u00f3n y su docstring."
+                        },
+                        {
+                            "name": "write_output",
+                            "docstring": "Escribe la informaci\u00f3n del repositorio en un archivo de salida. El formato de salida\nse determina por la extensi\u00f3n del archivo: .json para JSON, y cualquier otra cosa para texto plano.\n\n:param repo_info: Diccionario con la informaci\u00f3n del repositorio.\n:param output_file: Ruta del archivo de salida donde se escribir\u00e1 la informaci\u00f3n."
+                        },
+                        {
+                            "name": "_write_dict",
+                            "docstring": "Escribe de manera recursiva la informaci\u00f3n del repositorio en formato de texto plano.\n\n:param data: Datos a escribir.\n:param file: Descriptor de archivo abierto.\n:param indent: Nivel actual de indentaci\u00f3n."
+                        }
+                    ]
+                }
+            ],
+            "functions": []
+        },
+        "repogpt/docs": {
+            "repogpt/docs/IDEA.md": {
+                "__type__": "file",
+                "content": "# RepoGPT\n\nQuick generation of project or repository summaries, suitable for consumption by chatgpt, without the need for additional context\n\nOUTPUT STRUCTURE:\n\n1. PROJECT SUMMARY - README.MD / IDEA.MD\n2. IMPLEMENTATION SUMMARY - DEVELPING.md, PROJECT STRUCTURE (improved tree command, with number of lines per file),\n3. SUMMARY OF EACH FILE: functionality (extract from: header + docstrings if any), and name the classes and functions by class."
+            }
+        }
+    },
+    "setup.py": {
+        "classes": [],
+        "functions": []
+    }
+}
