@@ -1,6 +1,6 @@
 # RepoGPT
 
-RepoGPT is a tool designed to summarize the code in a repository. It works iterating code repositories and generating detailed and structured project summaries -  based on the .md files, and the docstrings.
+RepoGPT is a tool designed to summarize the  code (*.py) and docs (*.md) files in a repository. It works iterating through directories and generating detailed and structured project summaries - including classes, functions and and the docstrings. It supports .txt or .json output files, ready for your favourite LLM to ingest!
 
 Inspired by the [gpt-repository-loader](https://github.com/mpoon/gpt-repository-loader) and [gptrepo](https://github.com/zackees/gptrepo/tree/main).
 
@@ -50,9 +50,7 @@ A .txt file will appear in the working directoy, with the summary generated.
 
 RepoGPT allows you to customize the analysis using the following options:
 
-- `--repo_path`: Specifies the path of the repository to analyze. By default, the current directory is used.
-- `--extensions`: Defines the file extensions to include in the analysis. By default, .md files are included.
-- `--start_path`: Allows you to start the analysis from a specific subdirectory of the repository.
+- `--output`: Defines the file name and extension to output in the analysis. By default, 'example.txt' file are created.
 
 # Structure
 ```tap.
