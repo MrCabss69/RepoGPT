@@ -4,8 +4,8 @@ RepoGPT is a tool designed to summarize the  code (*.py) and docs (*.md) files i
 
 Inspired by the [gpt-repository-loader](https://github.com/mpoon/gpt-repository-loader) and [gptrepo](https://github.com/zackees/gptrepo/tree/main).
 
-![Example](repogpt/docs/example.png)
-
+[Example 1](example.json)
+[Example 2](example.txt)
 # Installing
 
 ## Clone the Repository:
