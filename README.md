@@ -4,8 +4,12 @@ RepoGPT is a tool designed to summarize the  code (*.py) and docs (*.md) files i
 
 Inspired by the [gpt-repository-loader](https://github.com/mpoon/gpt-repository-loader) and [gptrepo](https://github.com/zackees/gptrepo/tree/main).
 
+# Examples 
 [Example 1](example.json)
+
 [Example 2](example.txt)
+
+
 # Installing
 
 ## Clone the Repository:
@@ -34,10 +38,10 @@ repogpt
 ```
 With some customization:
 ```tap
-repogpt --repo_path /path_to_repo --extensions .py .js --start_path src
+repogpt --output example.json
 ```
 
-A .txt file will appear in the working directoy, with the summary generated.
+A .json file will appear in the current working directoy, with the summary generated.
 
 
 ## Main Features
@@ -57,9 +61,7 @@ RepoGPT allows you to customize the analysis using the following options:
 ├── README.md
 ├── repogpt
 │   ├── docs
-│   │   ├── DEVELOPING.md
 │   │   ├── IDEA.md
-│   │   └── TODO.md
 │   ├── __init__.py
 │   └── tree_build.py
 └── setup.py
