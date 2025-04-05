@@ -1,14 +1,16 @@
-# repogpt/utils/gitignore.py
+# repogpt/utils/gitignore_handler.py
 import logging
 from pathlib import Path
-from typing import Callable, Optional,Dict
+from typing import Callable, Optional, Dict
 
 # Importar la librería
 try:
-    import gitignore_parser
+    # Importar la función específica directamente
+    from gitignore_parser import parse_gitignore as gitignore_parse_function
     gitignore_parser_available = True
+    # print(f"DEBUG: Importing gitignore_parser function") # Mantener si aún se necesita depurar
 except ImportError:
-    gitignore_parser = None
+    gitignore_parse_function = None
     gitignore_parser_available = False
     logging.warning("gitignore-parser no instalado. El manejo de .gitignore será limitado o inexistente.")
     logging.warning("Instala con: pip install gitignore-parser")
@@ -24,18 +26,26 @@ def _load_matcher_uncached(gitignore_path: Path) -> Optional[Callable[[str], boo
         logger.debug(".gitignore no encontrado en %s", gitignore_path)
         return None
 
-    if not gitignore_parser_available:
-        logger.warning("gitignore-parser no está disponible, no se puede parsear %s", gitignore_path)
+    if not gitignore_parser_available or gitignore_parse_function is None:
+        logger.warning("gitignore-parser o su función parse_gitignore no están disponibles, no se puede parsear %s", gitignore_path)
         return None # No podemos hacer matching
 
     try:
-        with gitignore_path.open('r', encoding='utf-8', errors='ignore') as f:
-            # gitignore_parser.parse devuelve una función que toma un path y devuelve True si coincide
-            matcher = gitignore_parser.parse(f)
-            logger.info("Matcher de .gitignore cargado desde %s", gitignore_path)
-            return matcher
+        # --- CAMBIO CLAVE: Usar la función correcta 'parse_gitignore' y pasar la ruta ---
+        matcher = gitignore_parse_function(gitignore_path)
+        # ---------------------------------------------------------------------------
+
+        if matcher: # Asegurarse de que la función devolvió algo usable
+             logger.info("Matcher de .gitignore cargado desde %s", gitignore_path)
+             return matcher
+        else:
+            # Esto no debería pasar si parse_gitignore tiene éxito, pero por si acaso
+             logger.warning("gitignore_parse_function devolvió None o False para %s", gitignore_path)
+             return None
+
     except Exception as e:
-        logger.error("Error parseando .gitignore en %s: %s", gitignore_path, e, exc_info=True)
+        # Capturar cualquier otro error durante el parseo del gitignore
+        logger.error("Error ejecutando parse_gitignore en %s: %s", gitignore_path, e, exc_info=True)
         return None # Error al parsear, tratar como si no hubiera gitignore
 
 def get_gitignore_matcher(repo_path: Path, use_cache: bool = True) -> Optional[Callable[[str], bool]]:
@@ -79,17 +89,14 @@ def is_path_ignored(absolute_path: Path, matcher: Optional[Callable[[str], bool]
         return False # No hay matcher, no ignorar
 
     try:
-        # La librería espera un path string absoluto
-        is_ignored = matcher(str(absolute_path))
+        # La librería espera un path string absoluto según el ejemplo
+        # Asegurarse de que el path sea absoluto
+        path_str = str(absolute_path.resolve())
+        is_ignored = matcher(path_str)
         if is_ignored:
-             logger.debug("Ruta %s ignorada por .gitignore.", absolute_path)
+             logger.debug("Ruta %s ignorada por .gitignore.", path_str)
         return is_ignored
     except Exception as e:
          # Captura errores inesperados del matcher
          logger.error("Error aplicando matcher de gitignore a %s: %s", absolute_path, e, exc_info=True)
          return False # Mejor no ignorar si hay error en el matcher
-
-# --- Funciones antiguas (load_gitignore_patterns, is_path_ignored con fnmatch) ---
-# --- Se pueden eliminar o mantener comentadas como referencia ---
-# def load_gitignore_patterns(repo_path: Path) -> List[str]: ...
-# def is_path_ignored_fnmatch(...) -> bool: ...

@@ -1,8 +1,91 @@
 # RepoGPT Analysis Report
 
+## Dependencies Found
+
+- Files: `requirements.txt`
+  *(Run with `--dependencies` for details)*
+
+
 ## File Details
 
-### `__init__.py`
+### `.gitignore`
+- **Lines:** 166
+
+*Structure information not available for this file type or parsing failed early.*
+
+---
+
+### `.trunk/.gitignore`
+- **Lines:** 9
+
+*Structure information not available for this file type or parsing failed early.*
+
+---
+
+### `.trunk/configs/.isort.cfg`
+- **Lines:** 2
+
+*Structure information not available for this file type or parsing failed early.*
+
+---
+
+### `.trunk/configs/.markdownlint.yaml`
+- **Lines:** 2
+
+*Structure information not available for this file type or parsing failed early.*
+
+---
+
+### `.trunk/configs/ruff.toml`
+- **Lines:** 5
+
+*Structure information not available for this file type or parsing failed early.*
+
+---
+
+### `.trunk/trunk.yaml`
+- **Lines:** 35
+
+*Structure information not available for this file type or parsing failed early.*
+
+---
+
+### `IDEA.md`
+- **Lines:** 9
+
+*Structure information not available for this file type or parsing failed early.*
+
+---
+
+### `LICENSE`
+- **Lines:** 21
+
+*Structure information not available for this file type or parsing failed early.*
+
+---
+
+### `README.md`
+- **Lines:** 208
+
+*Structure information not available for this file type or parsing failed early.*
+
+---
+
+### `example_.json`
+- **Lines:** 69
+
+*Structure information not available for this file type or parsing failed early.*
+
+---
+
+### `example_.txt`
+- **Lines:** 125
+
+*Structure information not available for this file type or parsing failed early.*
+
+---
+
+### `repogpt/__init__.py`
 - **Lines:** 13
 
 #### Structure:
@@ -10,7 +93,7 @@
 
 ---
 
-### `__main__.py`
+### `repogpt/__main__.py`
 - **Lines:** 260
 - **Tasks Found:** 3 TODOs
   *(Run with `--tasks` for full list)*
@@ -46,7 +129,7 @@ def main():
 
 ---
 
-### `analyzer.py`
+### `repogpt/analyzer.py`
 - **Lines:** 180
 
 #### Structure:
@@ -105,7 +188,40 @@ def process_file(self, file_path: Path) -> `Optional[Dict[str, Any]]`:
 
 ---
 
-### `exceptions.py`
+### `repogpt/codigo_concatenado.txt`
+- **Lines:** 2819
+
+*Structure information not available for this file type or parsing failed early.*
+
+---
+
+### `repogpt/concat.py`
+- **Lines:** 84
+
+#### Structure:
+- *(L4)* Import: `import os`
+
+#### Function `concatenar_py_recursivo` *(L6)*
+```python
+def concatenar_py_recursivo(directorio_raiz = '.', archivo_salida = 'codigo_concatenado.txt'):
+    ...
+```
+> **Docstring:**
+> ```text
+> Busca recursivamente archivos .py en directorio_raiz y sus subdirectorios,
+> y concatena su contenido en archivo_salida, añadiendo una cabecera
+> con la ruta del archivo antes de cada contenido.
+> 
+> Args:
+>     directorio_raiz (str): La ruta al directorio desde donde empezar la búsqueda.
+>                            Por defecto es el directorio actual ('.').
+>     archivo_salida (str): El nombre del archivo donde se guardará el resultado.
+>                           Por defecto es 'codigo_concatenado.txt'.
+> ```
+
+---
+
+### `repogpt/exceptions.py`
 - **Lines:** 26
 
 #### Structure:
@@ -147,7 +263,7 @@ def __init__(self, message: str, file_path: str = None, parser_name: str = None)
 
 ---
 
-### `extractors/__init__.py`
+### `repogpt/extractors/__init__.py`
 - **Lines:** 20
 
 #### Structure:
@@ -165,7 +281,7 @@ def __init__(self, message: str, file_path: str = None, parser_name: str = None)
 
 ---
 
-### `extractors/base.py`
+### `repogpt/extractors/base.py`
 - **Lines:** 34
 
 #### Structure:
@@ -208,7 +324,7 @@ def extract(self, analyzer: 'RepositoryAnalyzer', analyzed_data: Dict[str, Any])
 
 ---
 
-### `extractors/dependencies.py`
+### `repogpt/extractors/dependencies.py`
 - **Lines:** 153
 - **Tasks Found:** 2 TODOs
   *(Run with `--tasks` for full list)*
@@ -271,7 +387,7 @@ def _parse_environment_yaml(self, path: Path) -> `Dict[str, Any]`:
 
 ---
 
-### `extractors/git.py`
+### `repogpt/extractors/git.py`
 - **Lines:** 82
 
 #### Structure:
@@ -305,7 +421,7 @@ def extract(self, analyzer: RepositoryAnalyzer, analyzed_data: Dict[str, Any]) -
 
 ---
 
-### `extractors/metrics.py`
+### `repogpt/extractors/metrics.py`
 - **Lines:** 90
 
 #### Structure:
@@ -337,7 +453,7 @@ def extract(self, analyzer: RepositoryAnalyzer, analyzed_data: Dict[str, Any]) -
 
 ---
 
-### `extractors/structure.py`
+### `repogpt/extractors/structure.py`
 - **Lines:** 59
 
 #### Structure:
@@ -369,7 +485,7 @@ def extract(self, analyzer: RepositoryAnalyzer, analyzed_data: Dict[str, Any]) -
 
 ---
 
-### `extractors/todos.py`
+### `repogpt/extractors/todos.py`
 - **Lines:** 49
 - **Tasks Found:** 1 TODOs
   *(Run with `--tasks` for full list)*
@@ -401,7 +517,7 @@ def extract(self, analyzer: RepositoryAnalyzer, analyzed_data: Dict[str, Any]) -
 
 ---
 
-### `parsers/__init__.py`
+### `repogpt/parsers/__init__.py`
 - **Lines:** 15
 
 #### Structure:
@@ -423,7 +539,7 @@ def extract(self, analyzer: RepositoryAnalyzer, analyzed_data: Dict[str, Any]) -
 
 ---
 
-### `parsers/base.py`
+### `repogpt/parsers/base.py`
 - **Lines:** 147
 - **Tasks Found:** 2 TODOs
   *(Run with `--tasks` for full list)*
@@ -497,7 +613,7 @@ def get_parser(file_path: Path) -> `Optional[Parser]`:
 
 ---
 
-### `parsers/dockerfile_.py`
+### `repogpt/parsers/dockerfile_.py`
 - **Lines:** 172
 - **Tasks Found:** 5 TODOs
   *(Run with `--tasks` for full list)*
@@ -531,7 +647,7 @@ def parse(self, file_path: Path, file_info: Dict[str, Any]) -> `Dict[str, Any]`:
 
 ---
 
-### `parsers/generic.py`
+### `repogpt/parsers/generic.py`
 - **Lines:** 88
 - **Tasks Found:** 3 TODOs
   *(Run with `--tasks` for full list)*
@@ -565,7 +681,7 @@ def parse(self, file_path: Path, file_info: Dict[str, Any]) -> `Dict[str, Any]`:
 
 ---
 
-### `parsers/html.py`
+### `repogpt/parsers/html.py`
 - **Lines:** 54
 - **Tasks Found:** 1 TODOs
   *(Run with `--tasks` for full list)*
@@ -601,7 +717,7 @@ def parse(self, file_path: Path, file_info: Dict[str, Any]) -> `Dict[str, Any]`:
 
 ---
 
-### `parsers/javascript.py`
+### `repogpt/parsers/javascript.py`
 - **Lines:** 140
 - **Tasks Found:** 3 TODOs
   *(Run with `--tasks` for full list)*
@@ -646,7 +762,7 @@ def _parse_with_regex(self, content: str) -> `Dict[str, Any]`:
 
 ---
 
-### `parsers/markdown.py`
+### `repogpt/parsers/markdown.py`
 - **Lines:** 59
 - **Tasks Found:** 1 TODOs
   *(Run with `--tasks` for full list)*
@@ -682,7 +798,7 @@ def parse(self, file_path: Path, file_info: Dict[str, Any]) -> `Dict[str, Any]`:
 
 ---
 
-### `parsers/python.py`
+### `repogpt/parsers/python.py`
 - **Lines:** 304
 - **Tasks Found:** 5 TODOs, 1 FIXMEs
   *(Run with `--tasks` for full list)*
@@ -795,7 +911,7 @@ def _format_arguments(self, args: ast.arguments) -> `List[str]`:
 
 ---
 
-### `parsers/yaml_parser.py`
+### `repogpt/parsers/yaml_parser.py`
 - **Lines:** 93
 - **Tasks Found:** 1 TODOs
   *(Run with `--tasks` for full list)*
@@ -838,14 +954,7 @@ def _get_structure_preview(self, data: Any, depth = 0, max_depth = 2) -> `Any`:
 
 ---
 
-### `repogpt_analyzer.log`
-- **Lines:** 20
-
-*Structure information not available for this file type or parsing failed early.*
-
----
-
-### `reporting/__init__.py`
+### `repogpt/reporting/__init__.py`
 - **Lines:** 12
 
 #### Structure:
@@ -857,7 +966,7 @@ def _get_structure_preview(self, data: Any, depth = 0, max_depth = 2) -> `Any`:
 
 ---
 
-### `reporting/base.py`
+### `repogpt/reporting/base.py`
 - **Lines:** 21
 
 #### Structure:
@@ -891,7 +1000,7 @@ def generate(self, analysis_data: Dict[str, Any]) -> `str`:
 
 ---
 
-### `reporting/json_reporter.py`
+### `repogpt/reporting/json_reporter.py`
 - **Lines:** 39
 
 #### Structure:
@@ -925,7 +1034,7 @@ def generate(self, analysis_data: Dict[str, Any], report_options: argparse.Names
 
 ---
 
-### `reporting/markdown_reporter.py`
+### `repogpt/reporting/markdown_reporter.py`
 - **Lines:** 286
 - **Tasks Found:** 4 TODOs
   *(Run with `--tasks` for full list)*
@@ -996,14 +1105,14 @@ def _append_task_section(self, lines: List[str], title: str, task_map: Dict[str,
 
 ---
 
-### `utils/__init__.py`
+### `repogpt/utils/__init__.py`
 - **Lines:** 6
 
 *Structure information not available for this file type or parsing failed early.*
 
 ---
 
-### `utils/file_utils.py`
+### `repogpt/utils/file_utils.py`
 - **Lines:** 80
 
 #### Structure:
@@ -1054,8 +1163,8 @@ def is_likely_binary(file_path: Path, check_bytes: int = 1024) -> `bool`:
 
 ---
 
-### `utils/gitignore_handler.py`
-- **Lines:** 95
+### `repogpt/utils/gitignore_handler.py`
+- **Lines:** 102
 
 #### Structure:
 - *(L2)* Import: `import logging`
@@ -1064,7 +1173,7 @@ def is_likely_binary(file_path: Path, check_bytes: int = 1024) -> `bool`:
 
 - *(L4)* Import: `from typing import Callable, Optional, Dict`
 
-#### Function `_load_matcher_uncached` *(L21)*
+#### Function `_load_matcher_uncached` *(L23)*
 ```python
 def _load_matcher_uncached(gitignore_path: Path) -> `Optional[Callable[[str], bool]]`:
     ...
@@ -1074,7 +1183,7 @@ def _load_matcher_uncached(gitignore_path: Path) -> `Optional[Callable[[str], bo
 > Carga el matcher desde un archivo .gitignore sin usar caché.
 > ```
 
-#### Function `get_gitignore_matcher` *(L41)*
+#### Function `get_gitignore_matcher` *(L51)*
 ```python
 def get_gitignore_matcher(repo_path: Path, use_cache: bool = True) -> `Optional[Callable[[str], bool]]`:
     ...
@@ -1092,7 +1201,7 @@ def get_gitignore_matcher(repo_path: Path, use_cache: bool = True) -> `Optional[
 >     o None si no hay .gitignore o no se pudo parsear.
 > ```
 
-#### Function `is_path_ignored` *(L67)*
+#### Function `is_path_ignored` *(L77)*
 ```python
 def is_path_ignored(absolute_path: Path, matcher: Optional[Callable[[str], bool]]) -> `bool`:
     ...
@@ -1111,7 +1220,7 @@ def is_path_ignored(absolute_path: Path, matcher: Optional[Callable[[str], bool]
 
 ---
 
-### `utils/logging.py`
+### `repogpt/utils/logging.py`
 - **Lines:** 27
 
 #### Structure:
@@ -1127,7 +1236,7 @@ def configure_logging(log_level: str) -> `None`:
 
 ---
 
-### `utils/text_processing.py`
+### `repogpt/utils/text_processing.py`
 - **Lines:** 128
 - **Tasks Found:** 2 TODOs, 1 FIXMEs
   *(Run with `--tasks` for full list)*
@@ -1189,6 +1298,23 @@ def count_blank_lines(content: str) -> `int`:
 > ```text
 > Cuenta las líneas que están vacías o contienen solo espacios en blanco.
 > ```
+
+---
+
+### `requirements.txt`
+- **Lines:** 8
+
+*Structure information not available for this file type or parsing failed early.*
+
+---
+
+### `setup.py`
+- **Lines:** 63
+- **Tasks Found:** 1 TODOs
+  *(Run with `--tasks` for full list)*
+
+#### Structure:
+- *(L3)* Import: `from setuptools import setup, find_packages`
 
 ---
 
