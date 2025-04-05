@@ -1,23 +1,13 @@
-import argparse
-from pathlib import Path
-from repogpt.tree_build import TreeBuilder
+# repogpt/__init__.py
 
-def main():
-    parser = argparse.ArgumentParser(description="Enhanced repository processing script.")
-    parser.add_argument("repo_path", nargs="?", default=Path.cwd(), help="Path to the git repository")
-    parser.add_argument("--output", default="example.txt", help="Output file name")
-    args = parser.parse_args()
+# Versión del paquete
+__version__ = "0.2.0" # Actualizar según sea necesario
 
-    try:
-        repo_path = Path(args.repo_path).resolve()
-        tree = TreeBuilder(repo_path)
-        repo_info = tree.build_tree()
-        output_path = Path(args.output)
-        tree.write_output(repo_info, output_path)
-        print(f"Repository contents written to {output_path}")
-    except Exception as e:
-        print(f"Error processing the repository: {e}")
+# Opcional: importar elementos clave para acceso directo
+# from .analyzer import RepositoryAnalyzer
+# from .exceptions import RepoGPTException
 
-
-if __name__ == "__main__":
-    main()
+# Configurar un logger NullHandler por defecto para evitar mensajes si la app
+# que usa la librería no configura logging.
+import logging
+logging.getLogger(__name__).addHandler(logging.NullHandler())
