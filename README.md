@@ -1,6 +1,6 @@
 # RepoGPT
 
-RepoGPT analyzes software repositories, creating structured and detailed summaries suitable for ingestion by Large Language Models (LLMs) or for human review. It iterates through project directories, parses various file types, extracts structural information (classes, functions, imports), metadata (Git info, dependencies, metrics), tasks (TODOs/FIXMEs), and generates comprehensive reports in Markdown or JSON formats.
+RepoGPT analyzes software repos and creates structured summaries suitable for fast ingestion by Large Language Models (LLMs) or for human review. It iterates through project directories, parses various file types, extracts structural information, metadata, tasks , and generates comprehensive reports in Markdown or JSON formats.
 
 Inspired by [gpt-repository-loader](https://github.com/mpoon/gpt-repository-loader) and [gptrepo](https://github.com/zackees/gptrepo/tree/main).
 
@@ -21,7 +21,7 @@ Inspired by [gpt-repository-loader](https://github.com/mpoon/gpt-repository-load
 
 ## Prerequisites
 
-*   Python 3.8+ (Recommended, potentially 3.9+ needed for full `ast` features like `unparse`. Check `setup.py` or `pyproject.toml`.)
+*   Python 3.9+
 *   Git (Required for extracting Git information via the `git` extractor)
 
 ## Installation Steps
@@ -29,7 +29,6 @@ Inspired by [gpt-repository-loader](https://github.com/mpoon/gpt-repository-load
 1.  **Clone the Repository:**
     ```bash
     git clone https://github.com/MrCabss69/RepoGPT.git
-    # Or your fork/repo URL
     ```
 
 2.  **Navigate to the Project Directory:**

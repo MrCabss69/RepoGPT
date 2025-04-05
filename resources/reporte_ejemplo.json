@@ -1,0 +1,3534 @@
+{
+  "files": {
+    ".trunk/trunk.yaml": {
+      "path": "/home/jd/Documentos/CODE-2025/LLMTools/RepoGPT/.trunk/trunk.yaml",
+      "size": 978,
+      "hash": "12fd73dcba4ca922869583b9bcda7ff06b241c932d86729cf541110a0e265a7b",
+      "line_count": 35,
+      "top_level_keys": [
+        "version",
+        "cli",
+        "plugins",
+        "runtimes",
+        "lint",
+        "actions"
+      ],
+      "structure_preview": {
+        "version": "float",
+        "cli": {
+          "version": "str"
+        },
+        "plugins": {
+          "sources": [
+            "..."
+          ]
+        },
+        "runtimes": {
+          "enabled": [
+            "...",
+            "..."
+          ]
+        },
+        "lint": {
+          "enabled": [
+            "...",
+            "...",
+            "...",
+            "..."
+          ]
+        },
+        "actions": {
+          "disabled": [
+            "...",
+            "...",
+            "..."
+          ],
+          "enabled": [
+            "..."
+          ]
+        }
+      },
+      "blank_lines": 0,
+      "comments_count": 5,
+      "todos_fixmes": {
+        "todos": [],
+        "fixmes": []
+      }
+    },
+    ".trunk/.gitignore": {
+      "path": "/home/jd/Documentos/CODE-2025/LLMTools/RepoGPT/.trunk/.gitignore",
+      "size": 80,
+      "hash": "a3a6850a4d3873929d6296fb261801a240eaa67247f219894da802b45359fd7e",
+      "line_count": 9,
+      "content_preview": "*out\n*logs\n*actions\n*notifications\n*tools\nplugins\nuser_trunk.yaml\nuser.yaml\ntmp\n",
+      "todos_fixmes": {
+        "todos": [],
+        "fixmes": []
+      },
+      "comments_count": 0,
+      "blank_lines": 0
+    },
+    "requirements.txt": {
+      "path": "/home/jd/Documentos/CODE-2025/LLMTools/RepoGPT/requirements.txt",
+      "size": 270,
+      "hash": "7211cc0de10b0c8ba15896b49b19fe9ce5dd4b9233dcb001bdb0a7214b24528f",
+      "line_count": 8,
+      "content_preview": "# requirements.txt\n\n# Dependencias principales (si las hubiera)\n# Por ahora, parece no haber dependencias estrictas para el núcleo\n# (asumiendo que no usamos gitignore-parser aún)\n\n# Añadir aquí si se decide usar librerías para gitignore, etc.\ngitignore-parser>=0.1",
+      "todos_fixmes": {
+        "todos": [],
+        "fixmes": []
+      },
+      "comments_count": 5,
+      "blank_lines": 2
+    },
+    "repogpt/parsers/yaml_parser.py": {
+      "path": "/home/jd/Documentos/CODE-2025/LLMTools/RepoGPT/repogpt/parsers/yaml_parser.py",
+      "size": 3882,
+      "hash": "5050bb0cf4815134cb22deb278f4fbbd03af3fbd776d55db080234a1065a751f",
+      "line_count": 93,
+      "structure": [
+        {
+          "type": "import",
+          "line_start": 2,
+          "line_end": 2,
+          "value": "import logging"
+        },
+        {
+          "type": "import",
+          "line_start": 3,
+          "line_end": 3,
+          "value": "from pathlib import Path"
+        },
+        {
+          "type": "import",
+          "line_start": 4,
+          "line_end": 4,
+          "value": "from typing import Any, Dict"
+        },
+        {
+          "type": "import",
+          "line_start": 6,
+          "line_end": 6,
+          "value": "from base import Parser, register_parser"
+        },
+        {
+          "type": "import",
+          "line_start": 7,
+          "line_end": 7,
+          "value": "from utils.text_processing import extract_comments_from_content, extract_todos_fixmes_from_comments, count_blank_lines"
+        },
+        {
+          "type": "class",
+          "name": "YamlParser",
+          "docstring": "Parsea archivos YAML (.yaml, .yml).",
+          "line_start": 23,
+          "line_end": 88,
+          "bases": [
+            "Parser"
+          ],
+          "decorators": [],
+          "body": [
+            {
+              "type": "method",
+              "name": "parse",
+              "docstring": "Intenta cargar el archivo YAML y extrae claves principales.",
+              "line_start": 26,
+              "line_end": 68,
+              "arguments": [
+                "self",
+                "file_path: Path",
+                "file_info: Dict[str, Any]"
+              ],
+              "returns": "Dict[str, Any]",
+              "is_async": false,
+              "decorators": []
+            },
+            {
+              "type": "method",
+              "name": "_get_structure_preview",
+              "docstring": "Genera una vista previa de la estructura YAML/Dict.",
+              "line_start": 70,
+              "line_end": 88,
+              "arguments": [
+                "self",
+                "data: Any",
+                "depth = 0",
+                "max_depth = 2"
+              ],
+              "returns": "Any",
+              "is_async": false,
+              "decorators": []
+            }
+          ]
+        }
+      ],
+      "todos_fixmes": {
+        "todos": [
+          {
+            "line": 54,
+            "message": "s/FIXMEs"
+          }
+        ],
+        "fixmes": []
+      },
+      "blank_lines": 17,
+      "comments_count": 14
+    },
+    "repogpt/concat.py": {
+      "path": "/home/jd/Documentos/CODE-2025/LLMTools/RepoGPT/repogpt/concat.py",
+      "size": 4420,
+      "hash": "9e6188415d8bd24a9622395bd743ac67dc51995d9ed86607a938bd383fa60fa2",
+      "line_count": 84,
+      "structure": [
+        {
+          "type": "import",
+          "line_start": 4,
+          "line_end": 4,
+          "value": "import os"
+        },
+        {
+          "type": "function",
+          "name": "concatenar_py_recursivo",
+          "docstring": "Busca recursivamente archivos .py en directorio_raiz y sus subdirectorios,\ny concatena su contenido en archivo_salida, añadiendo una cabecera\ncon la ruta del archivo antes de cada contenido.\n\nArgs:\n    directorio_raiz (str): La ruta al directorio desde donde empezar la búsqueda.\n                           Por defecto es el directorio actual ('.').\n    archivo_salida (str): El nombre del archivo donde se guardará el resultado.\n                          Por defecto es 'codigo_concatenado.txt'.",
+          "line_start": 6,
+          "line_end": 77,
+          "arguments": [
+            "directorio_raiz = '.'",
+            "archivo_salida = 'codigo_concatenado.txt'"
+          ],
+          "returns": null,
+          "is_async": false,
+          "decorators": []
+        }
+      ],
+      "todos_fixmes": {
+        "todos": [],
+        "fixmes": []
+      },
+      "blank_lines": 15,
+      "comments_count": 11
+    },
+    "repogpt/utils/gitignore_handler.py": {
+      "path": "/home/jd/Documentos/CODE-2025/LLMTools/RepoGPT/repogpt/utils/gitignore_handler.py",
+      "size": 4495,
+      "hash": "dd687af4df1b4595537edb282393f5504f034c01e94ac4a5fc0b495b7f8723ff",
+      "line_count": 102,
+      "structure": [
+        {
+          "type": "import",
+          "line_start": 2,
+          "line_end": 2,
+          "value": "import logging"
+        },
+        {
+          "type": "import",
+          "line_start": 3,
+          "line_end": 3,
+          "value": "from pathlib import Path"
+        },
+        {
+          "type": "import",
+          "line_start": 4,
+          "line_end": 4,
+          "value": "from typing import Callable, Optional, Dict"
+        },
+        {
+          "type": "function",
+          "name": "_load_matcher_uncached",
+          "docstring": "Carga el matcher desde un archivo .gitignore sin usar caché.",
+          "line_start": 23,
+          "line_end": 49,
+          "arguments": [
+            "gitignore_path: Path"
+          ],
+          "returns": "Optional[Callable[[str], bool]]",
+          "is_async": false,
+          "decorators": []
+        },
+        {
+          "type": "function",
+          "name": "get_gitignore_matcher",
+          "docstring": "Obtiene la función matcher para el .gitignore del repositorio, opcionalmente desde caché.\n\nArgs:\n    repo_path: La ruta raíz del repositorio donde buscar .gitignore.\n    use_cache: Si se debe usar la caché de matchers.\n\nReturns:\n    Una función que toma un path (string) y devuelve True si debe ser ignorado,\n    o None si no hay .gitignore o no se pudo parsear.",
+          "line_start": 51,
+          "line_end": 75,
+          "arguments": [
+            "repo_path: Path",
+            "use_cache: bool = True"
+          ],
+          "returns": "Optional[Callable[[str], bool]]",
+          "is_async": false,
+          "decorators": []
+        },
+        {
+          "type": "function",
+          "name": "is_path_ignored",
+          "docstring": "Verifica si una ruta absoluta debe ser ignorada según el matcher de .gitignore.\n\nArgs:\n    absolute_path: La ruta absoluta del archivo o directorio a verificar.\n    matcher: La función matcher obtenida de get_gitignore_matcher.\n\nReturns:\n    True si la ruta debe ser ignorada, False en caso contrario.",
+          "line_start": 77,
+          "line_end": 102,
+          "arguments": [
+            "absolute_path: Path",
+            "matcher: Optional[Callable[[str], bool]]"
+          ],
+          "returns": "bool",
+          "is_async": false,
+          "decorators": []
+        }
+      ],
+      "todos_fixmes": {
+        "todos": [],
+        "fixmes": []
+      },
+      "blank_lines": 16,
+      "comments_count": 18
+    },
+    "repogpt/extractors/todos.py": {
+      "path": "/home/jd/Documentos/CODE-2025/LLMTools/RepoGPT/repogpt/extractors/todos.py",
+      "size": 2142,
+      "hash": "324a9399f3905b8cec5ce488b9338afe07c4371b2eb27994745de05bc172fa5c",
+      "line_count": 49,
+      "structure": [
+        {
+          "type": "import",
+          "line_start": 2,
+          "line_end": 2,
+          "value": "import logging"
+        },
+        {
+          "type": "import",
+          "line_start": 3,
+          "line_end": 3,
+          "value": "from typing import Any, Dict, List"
+        },
+        {
+          "type": "import",
+          "line_start": 5,
+          "line_end": 5,
+          "value": "from base import ExtractorModule"
+        },
+        {
+          "type": "import",
+          "line_start": 6,
+          "line_end": 6,
+          "value": "from repogpt.analyzer import RepositoryAnalyzer"
+        },
+        {
+          "type": "class",
+          "name": "TodoFixmeExtractor",
+          "docstring": "Agrega todos los TODOs y FIXMEs encontrados por los parsers.",
+          "line_start": 10,
+          "line_end": 49,
+          "bases": [
+            "ExtractorModule"
+          ],
+          "decorators": [],
+          "body": [
+            {
+              "type": "method",
+              "name": "extract",
+              "docstring": "Recopila las entradas 'todos_fixmes' de cada archivo analizado.",
+              "line_start": 13,
+              "line_end": 49,
+              "arguments": [
+                "self",
+                "analyzer: RepositoryAnalyzer",
+                "analyzed_data: Dict[str, Any]"
+              ],
+              "returns": "Dict[str, Any]",
+              "is_async": false,
+              "decorators": []
+            }
+          ]
+        }
+      ],
+      "todos_fixmes": {
+        "todos": [
+          {
+            "line": 1,
+            "message": "s.py"
+          }
+        ],
+        "fixmes": []
+      },
+      "blank_lines": 8,
+      "comments_count": 1
+    },
+    "repogpt/utils/file_utils.py": {
+      "path": "/home/jd/Documentos/CODE-2025/LLMTools/RepoGPT/repogpt/utils/file_utils.py",
+      "size": 3145,
+      "hash": "c4114fa5f1792754de8f1735b352db0e06fffe302060a1db2bd1c8827bcbba44",
+      "line_count": 80,
+      "structure": [
+        {
+          "type": "import",
+          "line_start": 3,
+          "line_end": 3,
+          "value": "import hashlib"
+        },
+        {
+          "type": "import",
+          "line_start": 4,
+          "line_end": 4,
+          "value": "import logging"
+        },
+        {
+          "type": "import",
+          "line_start": 5,
+          "line_end": 5,
+          "value": "from pathlib import Path"
+        },
+        {
+          "type": "import",
+          "line_start": 6,
+          "line_end": 6,
+          "value": "from typing import Optional"
+        },
+        {
+          "type": "function",
+          "name": "calculate_file_hash",
+          "docstring": "Calcula el hash de un archivo usando el algoritmo especificado.\n\nArgs:\n    file_path: Ruta al archivo.\n    algorithm: Algoritmo de hash a usar (ej. 'sha256', 'md5').\n\nReturns:\n    El hash en formato hexadecimal como string, o None si ocurre un error.",
+          "line_start": 12,
+          "line_end": 40,
+          "arguments": [
+            "file_path: Path",
+            "algorithm: str = 'sha256'"
+          ],
+          "returns": "Optional[str]",
+          "is_async": false,
+          "decorators": []
+        },
+        {
+          "type": "function",
+          "name": "is_likely_binary",
+          "docstring": "Intenta determinar si un archivo es probablemente binario.\n\nActualmente usa una heurística simple: la presencia de un byte NULL\ndentro de los primeros 'check_bytes'.\n\nArgs:\n    file_path: Ruta al archivo.\n    check_bytes: Número de bytes iniciales a revisar.\n\nReturns:\n    True si el archivo parece binario, False en caso contrario o si hay error.",
+          "line_start": 42,
+          "line_end": 78,
+          "arguments": [
+            "file_path: Path",
+            "check_bytes: int = 1024"
+          ],
+          "returns": "bool",
+          "is_async": false,
+          "decorators": []
+        }
+      ],
+      "todos_fixmes": {
+        "todos": [],
+        "fixmes": []
+      },
+      "blank_lines": 13,
+      "comments_count": 9
+    },
+    "repogpt/extractors/dependencies.py": {
+      "path": "/home/jd/Documentos/CODE-2025/LLMTools/RepoGPT/repogpt/extractors/dependencies.py",
+      "size": 6806,
+      "hash": "0495c0bd93eacf90ce1bc70846465a4c545c8686b6ceb8c95789c83dbc75eedd",
+      "line_count": 153,
+      "structure": [
+        {
+          "type": "import",
+          "line_start": 3,
+          "line_end": 3,
+          "value": "import json"
+        },
+        {
+          "type": "import",
+          "line_start": 4,
+          "line_end": 4,
+          "value": "import logging"
+        },
+        {
+          "type": "import",
+          "line_start": 5,
+          "line_end": 5,
+          "value": "import re"
+        },
+        {
+          "type": "import",
+          "line_start": 6,
+          "line_end": 6,
+          "value": "from pathlib import Path"
+        },
+        {
+          "type": "import",
+          "line_start": 7,
+          "line_end": 7,
+          "value": "from typing import Any, Dict, List, Optional"
+        },
+        {
+          "type": "import",
+          "line_start": 9,
+          "line_end": 9,
+          "value": "from base import ExtractorModule"
+        },
+        {
+          "type": "import",
+          "line_start": 10,
+          "line_end": 10,
+          "value": "from repogpt.analyzer import RepositoryAnalyzer"
+        },
+        {
+          "type": "class",
+          "name": "DependencyExtractor",
+          "docstring": "Extrae información de dependencias de archivos comunes.",
+          "line_start": 27,
+          "line_end": 153,
+          "bases": [
+            "ExtractorModule"
+          ],
+          "decorators": [],
+          "body": [
+            {
+              "type": "method",
+              "name": "extract",
+              "docstring": "Busca y parsea archivos de dependencias conocidos en la raíz del repo.",
+              "line_start": 42,
+              "line_end": 65,
+              "arguments": [
+                "self",
+                "analyzer: RepositoryAnalyzer",
+                "analyzed_data: Dict[str, Any]"
+              ],
+              "returns": "Dict[str, Any]",
+              "is_async": false,
+              "decorators": []
+            },
+            {
+              "type": "method",
+              "name": "_parse_package_json",
+              "docstring": null,
+              "line_start": 69,
+              "line_end": 85,
+              "arguments": [
+                "self",
+                "path: Path"
+              ],
+              "returns": "Dict[str, Any]",
+              "is_async": false,
+              "decorators": []
+            },
+            {
+              "type": "method",
+              "name": "_parse_requirements_txt",
+              "docstring": null,
+              "line_start": 87,
+              "line_end": 104,
+              "arguments": [
+                "self",
+                "path: Path"
+              ],
+              "returns": "List[str]",
+              "is_async": false,
+              "decorators": []
+            },
+            {
+              "type": "method",
+              "name": "_parse_pipfile",
+              "docstring": null,
+              "line_start": 106,
+              "line_end": 118,
+              "arguments": [
+                "self",
+                "path: Path"
+              ],
+              "returns": "Dict[str, Any]",
+              "is_async": false,
+              "decorators": []
+            },
+            {
+              "type": "method",
+              "name": "_parse_pyproject",
+              "docstring": null,
+              "line_start": 120,
+              "line_end": 137,
+              "arguments": [
+                "self",
+                "path: Path"
+              ],
+              "returns": "Dict[str, Any]",
+              "is_async": false,
+              "decorators": []
+            },
+            {
+              "type": "method",
+              "name": "_parse_environment_yaml",
+              "docstring": null,
+              "line_start": 139,
+              "line_end": 153,
+              "arguments": [
+                "self",
+                "path: Path"
+              ],
+              "returns": "Dict[str, Any]",
+              "is_async": false,
+              "decorators": []
+            }
+          ]
+        }
+      ],
+      "todos_fixmes": {
+        "todos": [
+          {
+            "line": 30,
+            "message": "s de parseo"
+          },
+          {
+            "line": 67,
+            "message": "s de Parseo Específicos ---"
+          }
+        ],
+        "fixmes": []
+      },
+      "blank_lines": 17,
+      "comments_count": 16
+    },
+    "repogpt/parsers/base.py": {
+      "path": "/home/jd/Documentos/CODE-2025/LLMTools/RepoGPT/repogpt/parsers/base.py",
+      "size": 6265,
+      "hash": "deec7da57b19e2a0b2ea997e90fdaeac8214d9801d40b131f7c34fd777445d8c",
+      "line_count": 147,
+      "structure": [
+        {
+          "type": "import",
+          "line_start": 3,
+          "line_end": 3,
+          "value": "import abc"
+        },
+        {
+          "type": "import",
+          "line_start": 4,
+          "line_end": 4,
+          "value": "import logging"
+        },
+        {
+          "type": "import",
+          "line_start": 5,
+          "line_end": 5,
+          "value": "from pathlib import Path"
+        },
+        {
+          "type": "import",
+          "line_start": 6,
+          "line_end": 6,
+          "value": "from typing import Any, Dict, Optional, Type"
+        },
+        {
+          "type": "import",
+          "line_start": 9,
+          "line_end": 9,
+          "value": "from utils.file_utils import is_likely_binary"
+        },
+        {
+          "type": "class",
+          "name": "Parser",
+          "docstring": "Clase base abstracta para todos los parsers de archivos.",
+          "line_start": 15,
+          "line_end": 35,
+          "bases": [
+            "abc.ABC"
+          ],
+          "decorators": [],
+          "body": [
+            {
+              "type": "method",
+              "name": "parse",
+              "docstring": "\n        Analiza el contenido del archivo dado.\n\n        Args:\n            file_path: Ruta al archivo a analizar.\n            file_info: Diccionario con metadatos pre-calculados (size, hash, etc.).\n                       El parser puede añadir o modificar este diccionario.\n\n        Returns:\n            Un diccionario con la información extraída específica del tipo de archivo.\n            Este diccionario será fusionado con file_info.\n            Debe devolver un diccionario vacío ({}) si no hay nada específico que extraer.\n            Puede lanzar excepciones si el parsing falla catastróficamente,\n            aunque es preferible devolver {'error': 'mensaje'} si es posible.\n        ",
+              "line_start": 19,
+              "line_end": 35,
+              "arguments": [
+                "self",
+                "file_path: Path",
+                "file_info: Dict[str, Any]"
+              ],
+              "returns": "Dict[str, Any]",
+              "is_async": false,
+              "decorators": [
+                "@abc.abstractmethod"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "function",
+          "name": "register_parser",
+          "docstring": "Registra una clase Parser para una extensión de archivo específica.",
+          "line_start": 40,
+          "line_end": 54,
+          "arguments": [
+            "extension: str",
+            "parser_class: Type[Parser]"
+          ],
+          "returns": "None",
+          "is_async": false,
+          "decorators": []
+        },
+        {
+          "type": "function",
+          "name": "get_parser",
+          "docstring": "Obtiene una instancia del parser adecuado para el archivo.\nPrioriza el nombre de archivo 'Dockerfile' y luego la extensión.\n\nArgs:\n    file_path: Ruta al archivo.\n\nReturns:\n    Una instancia del Parser registrado, o None si no hay parser adecuado.",
+          "line_start": 57,
+          "line_end": 120,
+          "arguments": [
+            "file_path: Path"
+          ],
+          "returns": "Optional[Parser]",
+          "is_async": false,
+          "decorators": []
+        }
+      ],
+      "todos_fixmes": {
+        "todos": [
+          {
+            "line": 138,
+            "message": "s los módulos de parser"
+          },
+          {
+            "line": 145,
+            "message": "s los parsers que crees"
+          }
+        ],
+        "fixmes": []
+      },
+      "blank_lines": 23,
+      "comments_count": 47
+    },
+    "repogpt/reporting/markdown_reporter.py": {
+      "path": "/home/jd/Documentos/CODE-2025/LLMTools/RepoGPT/repogpt/reporting/markdown_reporter.py",
+      "size": 15873,
+      "hash": "d16fb0a903d722092fc73d39493995b1621a796ed8eb88a325e1a259e1dae202",
+      "line_count": 286,
+      "structure": [
+        {
+          "type": "import",
+          "line_start": 3,
+          "line_end": 3,
+          "value": "import logging"
+        },
+        {
+          "type": "import",
+          "line_start": 4,
+          "line_end": 4,
+          "value": "from typing import Any, Dict, List"
+        },
+        {
+          "type": "import",
+          "line_start": 5,
+          "line_end": 5,
+          "value": "import json"
+        },
+        {
+          "type": "import",
+          "line_start": 6,
+          "line_end": 6,
+          "value": "import argparse"
+        },
+        {
+          "type": "import",
+          "line_start": 8,
+          "line_end": 8,
+          "value": "from base import Reporter"
+        },
+        {
+          "type": "class",
+          "name": "MarkdownReporter",
+          "docstring": "Genera el reporte en formato Markdown, incluyendo estructura detallada del código.",
+          "line_start": 12,
+          "line_end": 286,
+          "bases": [
+            "Reporter"
+          ],
+          "decorators": [],
+          "body": [
+            {
+              "type": "method",
+              "name": "generate",
+              "docstring": "Crea una cadena de texto Markdown a partir de los datos de análisis.",
+              "line_start": 16,
+              "line_end": 173,
+              "arguments": [
+                "self",
+                "analysis_data: Dict[str, Any]",
+                "report_options: argparse.Namespace"
+              ],
+              "returns": "str",
+              "is_async": false,
+              "decorators": []
+            },
+            {
+              "type": "method",
+              "name": "_render_structure",
+              "docstring": "Renderiza recursivamente la lista de elementos estructurales.",
+              "line_start": 176,
+              "line_end": 193,
+              "arguments": [
+                "self",
+                "lines: List[str]",
+                "structure: List[Dict[str, Any]]",
+                "indent_level: int = 0"
+              ],
+              "returns": null,
+              "is_async": false,
+              "decorators": []
+            },
+            {
+              "type": "method",
+              "name": "_render_function",
+              "docstring": "Renderiza una función o método.",
+              "line_start": 195,
+              "line_end": 229,
+              "arguments": [
+                "self",
+                "lines: List[str]",
+                "element: Dict[str, Any]",
+                "indent: str"
+              ],
+              "returns": null,
+              "is_async": false,
+              "decorators": []
+            },
+            {
+              "type": "method",
+              "name": "_render_class",
+              "docstring": "Renderiza una clase y su cuerpo.",
+              "line_start": 231,
+              "line_end": 262,
+              "arguments": [
+                "self",
+                "lines: List[str]",
+                "element: Dict[str, Any]",
+                "indent: str",
+                "indent_level: int"
+              ],
+              "returns": null,
+              "is_async": false,
+              "decorators": []
+            },
+            {
+              "type": "method",
+              "name": "_format_size",
+              "docstring": null,
+              "line_start": 265,
+              "line_end": 271,
+              "arguments": [
+                "self",
+                "size_bytes: int"
+              ],
+              "returns": "str",
+              "is_async": false,
+              "decorators": []
+            },
+            {
+              "type": "method",
+              "name": "_append_task_section",
+              "docstring": null,
+              "line_start": 274,
+              "line_end": 286,
+              "arguments": [
+                "self",
+                "lines: List[str]",
+                "title: str",
+                "task_map: Dict[str, List[Dict[str, Any]]]"
+              ],
+              "returns": null,
+              "is_async": false,
+              "decorators": []
+            }
+          ]
+        }
+      ],
+      "todos_fixmes": {
+        "todos": [
+          {
+            "line": 15,
+            "message": "generate ahora acepta 'report_options' (que será args)"
+          },
+          {
+            "line": 175,
+            "message": "s _render_structure, _render_function, _render_class sin cambios ---"
+          },
+          {
+            "line": 264,
+            "message": "s auxiliares _format_size, _append_task_section sin cambios ---"
+          },
+          {
+            "line": 273,
+            "message": "ahora solo se usa si se pide --tasks"
+          }
+        ],
+        "fixmes": []
+      },
+      "blank_lines": 32,
+      "comments_count": 21
+    },
+    "repogpt/utils/text_processing.py": {
+      "path": "/home/jd/Documentos/CODE-2025/LLMTools/RepoGPT/repogpt/utils/text_processing.py",
+      "size": 5934,
+      "hash": "b21efd12a793c80eac6603c4f5a56aa5f9619c65c9f82374904505cedee3c3c6",
+      "line_count": 128,
+      "structure": [
+        {
+          "type": "import",
+          "line_start": 2,
+          "line_end": 2,
+          "value": "import re"
+        },
+        {
+          "type": "import",
+          "line_start": 3,
+          "line_end": 3,
+          "value": "import logging"
+        },
+        {
+          "type": "import",
+          "line_start": 4,
+          "line_end": 4,
+          "value": "from typing import List, Dict, Any, Tuple"
+        },
+        {
+          "type": "function",
+          "name": "extract_todos_fixmes_from_comments",
+          "docstring": "Extrae TODOs y FIXMEs encontrados dentro de una lista de comentarios pre-extraídos.\n\nArgs:\n    comments: Una lista de diccionarios, donde cada dict representa un comentario\n              y debe tener al menos las claves 'line' (int o str) y 'text' (str).\n\nReturns:\n    Un diccionario con claves 'todos' y 'fixmes', cada una conteniendo una lista\n    de diccionarios {'line': ..., 'message': ...}.",
+          "line_start": 12,
+          "line_end": 46,
+          "arguments": [
+            "comments: List[Dict[str, Any]]"
+          ],
+          "returns": "Dict[str, List[Dict[str, Any]]]",
+          "is_async": false,
+          "decorators": []
+        },
+        {
+          "type": "function",
+          "name": "extract_comments_from_content",
+          "docstring": "Extrae comentarios de un bloque de contenido usando patrones Regex.\n\nArgs:\n    content: El contenido completo del archivo como string.\n    line_comment_patterns: Lista de patrones regex para comentarios de una línea.\n                           El grupo 1 debe capturar el texto del comentario.\n    block_comment_patterns: Lista de tuplas (start_regex, end_regex) para comentarios de bloque.\n                            La extracción será básica (extrae todo entre start y end).\n    include_docstrings: (No implementado aún) Si intentar extraer docstrings genéricos.\n\n\nReturns:\n    Lista de diccionarios de comentarios {'line': int, 'text': str} o {'line': 'block', 'text': str}.\n    El número de línea es aproximado para bloques.",
+          "line_start": 48,
+          "line_end": 119,
+          "arguments": [
+            "content: str",
+            "line_comment_patterns: List[str] = []",
+            "block_comment_patterns: List[Tuple[str, str]] = []",
+            "include_docstrings: bool = False"
+          ],
+          "returns": "List[Dict[str, Any]]",
+          "is_async": false,
+          "decorators": []
+        },
+        {
+          "type": "function",
+          "name": "count_blank_lines",
+          "docstring": "Cuenta las líneas que están vacías o contienen solo espacios en blanco.",
+          "line_start": 122,
+          "line_end": 128,
+          "arguments": [
+            "content: str"
+          ],
+          "returns": "int",
+          "is_async": false,
+          "decorators": []
+        }
+      ],
+      "todos_fixmes": {
+        "todos": [
+          {
+            "line": 8,
+            "message": "/FIXME, busca la palabra clave seguida opcionalmente"
+          },
+          {
+            "line": 79,
+            "message": "después del inicio del comentario"
+          }
+        ],
+        "fixmes": [
+          {
+            "line": 43,
+            "message": ""
+          }
+        ]
+      },
+      "blank_lines": 19,
+      "comments_count": 26
+    },
+    "repogpt/utils/__init__.py": {
+      "path": "/home/jd/Documentos/CODE-2025/LLMTools/RepoGPT/repogpt/utils/__init__.py",
+      "size": 261,
+      "hash": "75ed258d9080f72bcb650ef844a400f0bf50339b413ff929cafadc385d612a73",
+      "line_count": 6,
+      "structure": [],
+      "todos_fixmes": {
+        "todos": [],
+        "fixmes": []
+      },
+      "blank_lines": 1,
+      "comments_count": 5
+    },
+    "repogpt/analyzer.py": {
+      "path": "/home/jd/Documentos/CODE-2025/LLMTools/RepoGPT/repogpt/analyzer.py",
+      "size": 7830,
+      "hash": "e8861666f780aed99a0b81fc18f69bb9aed542e174ecd598e20428552ca121c7",
+      "line_count": 180,
+      "structure": [
+        {
+          "type": "import",
+          "line_start": 2,
+          "line_end": 2,
+          "value": "from concurrent.futures import ThreadPoolExecutor, as_completed"
+        },
+        {
+          "type": "import",
+          "line_start": 3,
+          "line_end": 3,
+          "value": "from typing import Any, Dict, Optional, Union"
+        },
+        {
+          "type": "import",
+          "line_start": 4,
+          "line_end": 4,
+          "value": "import os"
+        },
+        {
+          "type": "import",
+          "line_start": 5,
+          "line_end": 5,
+          "value": "import logging"
+        },
+        {
+          "type": "import",
+          "line_start": 6,
+          "line_end": 6,
+          "value": "from pathlib import Path"
+        },
+        {
+          "type": "import",
+          "line_start": 8,
+          "line_end": 8,
+          "value": "from parsers.base import get_parser"
+        },
+        {
+          "type": "import",
+          "line_start": 9,
+          "line_end": 9,
+          "value": "from utils.file_utils import calculate_file_hash, is_likely_binary"
+        },
+        {
+          "type": "import",
+          "line_start": 10,
+          "line_end": 10,
+          "value": "from utils.gitignore_handler import get_gitignore_matcher, is_path_ignored"
+        },
+        {
+          "type": "class",
+          "name": "RepositoryAnalyzer",
+          "docstring": null,
+          "line_start": 17,
+          "line_end": 180,
+          "bases": [],
+          "decorators": [],
+          "body": [
+            {
+              "type": "method",
+              "name": "__init__",
+              "docstring": null,
+              "line_start": 18,
+              "line_end": 36,
+              "arguments": [
+                "self",
+                "repo_path: Union[str, Path]",
+                "start_path: str = ''",
+                "max_depth: Optional[int] = None",
+                "max_workers: int = 4",
+                "max_file_size: int = MAX_FILE_SIZE",
+                "use_gitignore: bool = True"
+              ],
+              "returns": "None",
+              "is_async": false,
+              "decorators": []
+            },
+            {
+              "type": "method",
+              "name": "_validate_paths",
+              "docstring": null,
+              "line_start": 37,
+              "line_end": 46,
+              "arguments": [
+                "self"
+              ],
+              "returns": "None",
+              "is_async": false,
+              "decorators": []
+            },
+            {
+              "type": "method",
+              "name": "is_excluded",
+              "docstring": null,
+              "line_start": 49,
+              "line_end": 72,
+              "arguments": [
+                "self",
+                "path: Path"
+              ],
+              "returns": "bool",
+              "is_async": false,
+              "decorators": []
+            },
+            {
+              "type": "method",
+              "name": "_walk_directory",
+              "docstring": null,
+              "line_start": 74,
+              "line_end": 113,
+              "arguments": [
+                "self"
+              ],
+              "returns": null,
+              "is_async": false,
+              "decorators": []
+            },
+            {
+              "type": "method",
+              "name": "analyze_repository",
+              "docstring": null,
+              "line_start": 115,
+              "line_end": 145,
+              "arguments": [
+                "self"
+              ],
+              "returns": "Dict[str, Any]",
+              "is_async": false,
+              "decorators": []
+            },
+            {
+              "type": "method",
+              "name": "process_file",
+              "docstring": "Procesa un archivo individual.",
+              "line_start": 147,
+              "line_end": 180,
+              "arguments": [
+                "self",
+                "file_path: Path"
+              ],
+              "returns": "Optional[Dict[str, Any]]",
+              "is_async": false,
+              "decorators": []
+            }
+          ]
+        }
+      ],
+      "todos_fixmes": {
+        "todos": [],
+        "fixmes": []
+      },
+      "blank_lines": 29,
+      "comments_count": 26
+    },
+    ".gitignore": {
+      "path": "/home/jd/Documentos/CODE-2025/LLMTools/RepoGPT/.gitignore",
+      "size": 3156,
+      "hash": "d2bf1d3c8c3ef48ba512e7a26bad3289f6c91d806a876a2d2d82cd432f4a908c",
+      "line_count": 166,
+      "content_preview": "# Creado por: [@MrCabs69]\n# Fecha de creación: Thu Mar 07 2024\n\n# CSVs\n*.csv\n\n# Byte-compiled / optimized / DLL files\n*__pycache__\n*.py[cod]\n*$py.class\n\n# C extensions\n*.so\n\n# Distribution / packaging\n.Python\nbuild/\ndevelop-eggs/\ndist/\ndownloads/\neggs/\n.eggs/\nlib/\nlib64/\nparts/\nsdist/\nvar/\nwheels/\nshare/python-wheels/\n*.egg-info/\n.installed.cfg\n*.egg\nMANIFEST\n\n# PyInstaller\n#  Usually these files are written by a python script from a template\n#  before PyInstaller builds the exe, so as to inject...",
+      "todos_fixmes": {
+        "todos": [],
+        "fixmes": []
+      },
+      "comments_count": 9,
+      "blank_lines": 31
+    },
+    "repogpt/parsers/javascript.py": {
+      "path": "/home/jd/Documentos/CODE-2025/LLMTools/RepoGPT/repogpt/parsers/javascript.py",
+      "size": 7284,
+      "hash": "675f226002078eac41c5cce040a859a2d65fd5e9ec8812be0557a9c9046c1745",
+      "line_count": 140,
+      "structure": [
+        {
+          "type": "import",
+          "line_start": 2,
+          "line_end": 2,
+          "value": "import logging"
+        },
+        {
+          "type": "import",
+          "line_start": 3,
+          "line_end": 3,
+          "value": "import re"
+        },
+        {
+          "type": "import",
+          "line_start": 4,
+          "line_end": 4,
+          "value": "from pathlib import Path"
+        },
+        {
+          "type": "import",
+          "line_start": 5,
+          "line_end": 5,
+          "value": "from typing import Any, Dict, Set"
+        },
+        {
+          "type": "import",
+          "line_start": 7,
+          "line_end": 7,
+          "value": "from base import Parser, register_parser"
+        },
+        {
+          "type": "import",
+          "line_start": 8,
+          "line_end": 8,
+          "value": "from utils.text_processing import extract_comments_from_content, extract_todos_fixmes_from_comments, count_blank_lines"
+        },
+        {
+          "type": "class",
+          "name": "JavaScriptParser",
+          "docstring": "Parsea archivos JavaScript/TypeScript (.js, .jsx, .ts, .tsx).",
+          "line_start": 23,
+          "line_end": 132,
+          "bases": [
+            "Parser"
+          ],
+          "decorators": [],
+          "body": [
+            {
+              "type": "method",
+              "name": "parse",
+              "docstring": "Intenta usar AST si está disponible, si no, usa Regex.",
+              "line_start": 26,
+              "line_end": 90,
+              "arguments": [
+                "self",
+                "file_path: Path",
+                "file_info: Dict[str, Any]"
+              ],
+              "returns": "Dict[str, Any]",
+              "is_async": false,
+              "decorators": []
+            },
+            {
+              "type": "method",
+              "name": "_parse_with_regex",
+              "docstring": "Análisis basado en Regex para JS/TS (menos preciso).",
+              "line_start": 92,
+              "line_end": 132,
+              "arguments": [
+                "self",
+                "content: str"
+              ],
+              "returns": "Dict[str, Any]",
+              "is_async": false,
+              "decorators": []
+            }
+          ]
+        }
+      ],
+      "todos_fixmes": {
+        "todos": [
+          {
+            "line": 71,
+            "message": "s/FIXMEs"
+          },
+          {
+            "line": 81,
+            "message": "s eliminados"
+          },
+          {
+            "line": 84,
+            "message": "s eliminados"
+          }
+        ],
+        "fixmes": []
+      },
+      "blank_lines": 22,
+      "comments_count": 35
+    },
+    "repogpt/extractors/__init__.py": {
+      "path": "/home/jd/Documentos/CODE-2025/LLMTools/RepoGPT/repogpt/extractors/__init__.py",
+      "size": 416,
+      "hash": "babc6f9172010485d37226fd5ab281471626bbec266768f29b8249071b25bdce",
+      "line_count": 20,
+      "structure": [
+        {
+          "type": "import",
+          "line_start": 4,
+          "line_end": 4,
+          "value": "from . import dependencies"
+        },
+        {
+          "type": "import",
+          "line_start": 5,
+          "line_end": 5,
+          "value": "from . import git"
+        },
+        {
+          "type": "import",
+          "line_start": 6,
+          "line_end": 6,
+          "value": "from . import metrics"
+        },
+        {
+          "type": "import",
+          "line_start": 7,
+          "line_end": 7,
+          "value": "from . import structure"
+        },
+        {
+          "type": "import",
+          "line_start": 8,
+          "line_end": 8,
+          "value": "from . import todos"
+        },
+        {
+          "type": "import",
+          "line_start": 11,
+          "line_end": 11,
+          "value": "from base import ExtractorModule"
+        }
+      ],
+      "todos_fixmes": {
+        "todos": [],
+        "fixmes": []
+      },
+      "blank_lines": 3,
+      "comments_count": 3
+    },
+    "repogpt/extractors/base.py": {
+      "path": "/home/jd/Documentos/CODE-2025/LLMTools/RepoGPT/repogpt/extractors/base.py",
+      "size": 1402,
+      "hash": "ef387a0d35125ae2f64e52a838a1884a6e467485b0c4491618cdd7d926d1d4a9",
+      "line_count": 34,
+      "structure": [
+        {
+          "type": "import",
+          "line_start": 3,
+          "line_end": 3,
+          "value": "import abc"
+        },
+        {
+          "type": "import",
+          "line_start": 4,
+          "line_end": 4,
+          "value": "import logging"
+        },
+        {
+          "type": "import",
+          "line_start": 5,
+          "line_end": 5,
+          "value": "from typing import Any, Dict"
+        },
+        {
+          "type": "import",
+          "line_start": 8,
+          "line_end": 8,
+          "value": "from typing import TYPE_CHECKING"
+        },
+        {
+          "type": "class",
+          "name": "ExtractorModule",
+          "docstring": "Clase base abstracta para módulos que extraen información específica.",
+          "line_start": 14,
+          "line_end": 34,
+          "bases": [
+            "abc.ABC"
+          ],
+          "decorators": [],
+          "body": [
+            {
+              "type": "method",
+              "name": "extract",
+              "docstring": "\n        Extrae información específica del repositorio o de los datos ya analizados.\n\n        Args:\n            analyzer: La instancia de RepositoryAnalyzer (para acceso a repo_path, etc.).\n            analyzed_data: El diccionario que contiene los resultados del análisis\n                           de archivos realizado por RepositoryAnalyzer (bajo la clave 'files').\n                           Este diccionario puede ser modificado por extractores anteriores.\n\n        Returns:\n            Un diccionario que contiene la información extraída. La clave principal\n            debe ser única para este extractor (ej. 'dependencies', 'git_info').\n            Este diccionario se fusionará con los resultados generales.\n            Debe devolver un diccionario vacío ({}) si no se extrae nada.\n        ",
+              "line_start": 18,
+              "line_end": 34,
+              "arguments": [
+                "self",
+                "analyzer: 'RepositoryAnalyzer'",
+                "analyzed_data: Dict[str, Any]"
+              ],
+              "returns": "Dict[str, Any]",
+              "is_async": false,
+              "decorators": [
+                "@abc.abstractmethod"
+              ]
+            }
+          ]
+        }
+      ],
+      "todos_fixmes": {
+        "todos": [],
+        "fixmes": []
+      },
+      "blank_lines": 7,
+      "comments_count": 2
+    },
+    "repogpt/utils/logging.py": {
+      "path": "/home/jd/Documentos/CODE-2025/LLMTools/RepoGPT/repogpt/utils/logging.py",
+      "size": 927,
+      "hash": "0f89c54f3220240c10993699debac78958fa51967d9d6d55bb9806cfbe4ad37f",
+      "line_count": 27,
+      "structure": [
+        {
+          "type": "import",
+          "line_start": 2,
+          "line_end": 2,
+          "value": "import logging"
+        },
+        {
+          "type": "import",
+          "line_start": 3,
+          "line_end": 3,
+          "value": "import sys"
+        },
+        {
+          "type": "function",
+          "name": "configure_logging",
+          "docstring": null,
+          "line_start": 5,
+          "line_end": 25,
+          "arguments": [
+            "log_level: str"
+          ],
+          "returns": "None",
+          "is_async": false,
+          "decorators": []
+        }
+      ],
+      "todos_fixmes": {
+        "todos": [],
+        "fixmes": []
+      },
+      "blank_lines": 2,
+      "comments_count": 6
+    },
+    "IDEA.md": {
+      "path": "/home/jd/Documentos/CODE-2025/LLMTools/RepoGPT/IDEA.md",
+      "size": 445,
+      "hash": "948972e52de36131dcb8afafc5075dbdcecfbc74ec01ed40b1914708e17f468c",
+      "line_count": 9,
+      "headings": [
+        {
+          "level": 1,
+          "title": "RepoGPT"
+        }
+      ],
+      "links": [],
+      "code_blocks": 0,
+      "content_preview": "# RepoGPT\n\nQuick generation of project or repository summaries, suitable for consumption by chatgpt, without the need for additional context\n\nOUTPUT STRUCTURE:\n\n1. PROJECT SUMMARY - README.MD / IDEA.MD\n2. IMPLEMENTATION SUMMARY - DEVELPING.md, PROJECT STRUCTURE (improved tree command, with number of lines per file),\n3. SUMMARY OF EACH FILE: functionality (extract from: header + docstrings if any), and name the classes and functions by class.",
+      "blank_lines": 3,
+      "comments_count": 0,
+      "todos_fixmes": {
+        "todos": [],
+        "fixmes": []
+      }
+    },
+    "repogpt/reporting/json_reporter.py": {
+      "path": "/home/jd/Documentos/CODE-2025/LLMTools/RepoGPT/repogpt/reporting/json_reporter.py",
+      "size": 2084,
+      "hash": "1ffbde7590cd8735e12cf5e7225822e7130461a9c354a412ecd77c3dfdca13c9",
+      "line_count": 39,
+      "structure": [
+        {
+          "type": "import",
+          "line_start": 1,
+          "line_end": 1,
+          "value": "import json"
+        },
+        {
+          "type": "import",
+          "line_start": 2,
+          "line_end": 2,
+          "value": "import logging"
+        },
+        {
+          "type": "import",
+          "line_start": 3,
+          "line_end": 3,
+          "value": "from typing import Any, Dict"
+        },
+        {
+          "type": "import",
+          "line_start": 4,
+          "line_end": 4,
+          "value": "import argparse"
+        },
+        {
+          "type": "import",
+          "line_start": 6,
+          "line_end": 6,
+          "value": "from base import Reporter"
+        },
+        {
+          "type": "import",
+          "line_start": 8,
+          "line_end": 8,
+          "value": "from repogpt.exceptions import ReportingError"
+        },
+        {
+          "type": "class",
+          "name": "JsonReporter",
+          "docstring": "Genera el reporte en formato JSON.",
+          "line_start": 12,
+          "line_end": 39,
+          "bases": [
+            "Reporter"
+          ],
+          "decorators": [],
+          "body": [
+            {
+              "type": "method",
+              "name": "generate",
+              "docstring": "Convierte los datos de análisis a una cadena JSON formateada.",
+              "line_start": 16,
+              "line_end": 39,
+              "arguments": [
+                "self",
+                "analysis_data: Dict[str, Any]",
+                "report_options: argparse.Namespace"
+              ],
+              "returns": "str",
+              "is_async": false,
+              "decorators": []
+            }
+          ]
+        }
+      ],
+      "todos_fixmes": {
+        "todos": [],
+        "fixmes": []
+      },
+      "blank_lines": 5,
+      "comments_count": 5
+    },
+    "reporte_ejemplo.md": {
+      "path": "/home/jd/Documentos/CODE-2025/LLMTools/RepoGPT/reporte_ejemplo.md",
+      "size": 32615,
+      "hash": "27014a4df8d9dce9fe96ae123377242cf478cc701cbdbdd91245a40e6e729604",
+      "line_count": 1315,
+      "headings": [
+        {
+          "level": 1,
+          "title": "RepoGPT Analysis Report"
+        },
+        {
+          "level": 2,
+          "title": "Dependencies Found"
+        },
+        {
+          "level": 2,
+          "title": "File Details"
+        },
+        {
+          "level": 3,
+          "title": "`.gitignore`"
+        },
+        {
+          "level": 3,
+          "title": "`.trunk/.gitignore`"
+        },
+        {
+          "level": 3,
+          "title": "`.trunk/configs/.isort.cfg`"
+        },
+        {
+          "level": 3,
+          "title": "`.trunk/configs/.markdownlint.yaml`"
+        },
+        {
+          "level": 3,
+          "title": "`.trunk/configs/ruff.toml`"
+        },
+        {
+          "level": 3,
+          "title": "`.trunk/trunk.yaml`"
+        },
+        {
+          "level": 3,
+          "title": "`IDEA.md`"
+        },
+        {
+          "level": 3,
+          "title": "`LICENSE`"
+        },
+        {
+          "level": 3,
+          "title": "`README.es`"
+        },
+        {
+          "level": 3,
+          "title": "`README.md`"
+        },
+        {
+          "level": 3,
+          "title": "`repogpt/__init__.py`"
+        },
+        {
+          "level": 4,
+          "title": "Structure:"
+        },
+        {
+          "level": 3,
+          "title": "`repogpt/__main__.py`"
+        },
+        {
+          "level": 4,
+          "title": "Structure:"
+        },
+        {
+          "level": 4,
+          "title": "Function `main` *(L31)*"
+        },
+        {
+          "level": 3,
+          "title": "`repogpt/analyzer.py`"
+        },
+        {
+          "level": 4,
+          "title": "Structure:"
+        },
+        {
+          "level": 4,
+          "title": "Class `RepositoryAnalyzer` *(L17)*"
+        },
+        {
+          "level": 3,
+          "title": "`repogpt/codigo_concatenado.txt`"
+        },
+        {
+          "level": 3,
+          "title": "`repogpt/concat.py`"
+        },
+        {
+          "level": 4,
+          "title": "Structure:"
+        },
+        {
+          "level": 4,
+          "title": "Function `concatenar_py_recursivo` *(L6)*"
+        },
+        {
+          "level": 3,
+          "title": "`repogpt/exceptions.py`"
+        },
+        {
+          "level": 4,
+          "title": "Structure:"
+        },
+        {
+          "level": 4,
+          "title": "Class `RepoGPTException`(`Exception`) *(L3)*"
+        },
+        {
+          "level": 4,
+          "title": "Class `ConfigurationError`(`RepoGPTException`) *(L7)*"
+        },
+        {
+          "level": 4,
+          "title": "Class `ParsingError`(`RepoGPTException`) *(L11)*"
+        },
+        {
+          "level": 4,
+          "title": "Class `AnalysisError`(`RepoGPTException`) *(L20)*"
+        },
+        {
+          "level": 4,
+          "title": "Class `ReportingError`(`RepoGPTException`) *(L24)*"
+        },
+        {
+          "level": 3,
+          "title": "`repogpt/extractors/__init__.py`"
+        },
+        {
+          "level": 4,
+          "title": "Structure:"
+        },
+        {
+          "level": 3,
+          "title": "`repogpt/extractors/base.py`"
+        },
+        {
+          "level": 4,
+          "title": "Structure:"
+        },
+        {
+          "level": 4,
+          "title": "Class `ExtractorModule`(`abc.ABC`) *(L14)*"
+        },
+        {
+          "level": 3,
+          "title": "`repogpt/extractors/dependencies.py`"
+        },
+        {
+          "level": 4,
+          "title": "Structure:"
+        },
+        {
+          "level": 4,
+          "title": "Class `DependencyExtractor`(`ExtractorModule`) *(L27)*"
+        },
+        {
+          "level": 3,
+          "title": "`repogpt/extractors/git.py`"
+        },
+        {
+          "level": 4,
+          "title": "Structure:"
+        },
+        {
+          "level": 4,
+          "title": "Class `GitInfoExtractor`(`ExtractorModule`) *(L12)*"
+        },
+        {
+          "level": 3,
+          "title": "`repogpt/extractors/metrics.py`"
+        },
+        {
+          "level": 4,
+          "title": "Structure:"
+        },
+        {
+          "level": 4,
+          "title": "Class `CodeMetricsExtractor`(`ExtractorModule`) *(L11)*"
+        },
+        {
+          "level": 3,
+          "title": "`repogpt/extractors/structure.py`"
+        },
+        {
+          "level": 4,
+          "title": "Structure:"
+        },
+        {
+          "level": 4,
+          "title": "Class `StructureExtractor`(`ExtractorModule`) *(L11)*"
+        },
+        {
+          "level": 3,
+          "title": "`repogpt/extractors/todos.py`"
+        },
+        {
+          "level": 4,
+          "title": "Structure:"
+        },
+        {
+          "level": 4,
+          "title": "Class `TodoFixmeExtractor`(`ExtractorModule`) *(L10)*"
+        },
+        {
+          "level": 3,
+          "title": "`repogpt/parsers/__init__.py`"
+        },
+        {
+          "level": 4,
+          "title": "Structure:"
+        },
+        {
+          "level": 3,
+          "title": "`repogpt/parsers/base.py`"
+        },
+        {
+          "level": 4,
+          "title": "Structure:"
+        },
+        {
+          "level": 4,
+          "title": "Class `Parser`(`abc.ABC`) *(L15)*"
+        },
+        {
+          "level": 4,
+          "title": "Function `register_parser` *(L40)*"
+        },
+        {
+          "level": 4,
+          "title": "Function `get_parser` *(L57)*"
+        },
+        {
+          "level": 3,
+          "title": "`repogpt/parsers/dockerfile_.py`"
+        },
+        {
+          "level": 4,
+          "title": "Structure:"
+        },
+        {
+          "level": 4,
+          "title": "Class `DockerfileParser`(`Parser`) *(L12)*"
+        },
+        {
+          "level": 3,
+          "title": "`repogpt/parsers/generic.py`"
+        },
+        {
+          "level": 4,
+          "title": "Structure:"
+        },
+        {
+          "level": 4,
+          "title": "Class `GenericTextParser`(`Parser`) *(L16)*"
+        },
+        {
+          "level": 3,
+          "title": "`repogpt/parsers/html.py`"
+        },
+        {
+          "level": 4,
+          "title": "Structure:"
+        },
+        {
+          "level": 4,
+          "title": "Class `HtmlParser`(`Parser`) *(L13)*"
+        },
+        {
+          "level": 3,
+          "title": "`repogpt/parsers/javascript.py`"
+        },
+        {
+          "level": 4,
+          "title": "Structure:"
+        },
+        {
+          "level": 4,
+          "title": "Class `JavaScriptParser`(`Parser`) *(L23)*"
+        },
+        {
+          "level": 3,
+          "title": "`repogpt/parsers/markdown.py`"
+        },
+        {
+          "level": 4,
+          "title": "Structure:"
+        },
+        {
+          "level": 4,
+          "title": "Class `MarkdownParser`(`Parser`) *(L12)*"
+        },
+        {
+          "level": 3,
+          "title": "`repogpt/parsers/python.py`"
+        },
+        {
+          "level": 4,
+          "title": "Structure:"
+        },
+        {
+          "level": 4,
+          "title": "Function `get_comment_text` *(L16)*"
+        },
+        {
+          "level": 4,
+          "title": "Class `PythonParser`(`Parser`) *(L22)*"
+        },
+        {
+          "level": 3,
+          "title": "`repogpt/parsers/yaml_parser.py`"
+        },
+        {
+          "level": 4,
+          "title": "Structure:"
+        },
+        {
+          "level": 4,
+          "title": "Class `YamlParser`(`Parser`) *(L23)*"
+        },
+        {
+          "level": 3,
+          "title": "`repogpt/reporting/__init__.py`"
+        },
+        {
+          "level": 4,
+          "title": "Structure:"
+        },
+        {
+          "level": 3,
+          "title": "`repogpt/reporting/base.py`"
+        },
+        {
+          "level": 4,
+          "title": "Structure:"
+        },
+        {
+          "level": 4,
+          "title": "Class `Reporter`(`abc.ABC`) *(L6)*"
+        },
+        {
+          "level": 3,
+          "title": "`repogpt/reporting/json_reporter.py`"
+        },
+        {
+          "level": 4,
+          "title": "Structure:"
+        },
+        {
+          "level": 4,
+          "title": "Class `JsonReporter`(`Reporter`) *(L12)*"
+        },
+        {
+          "level": 3,
+          "title": "`repogpt/reporting/markdown_reporter.py`"
+        },
+        {
+          "level": 4,
+          "title": "Structure:"
+        },
+        {
+          "level": 4,
+          "title": "Class `MarkdownReporter`(`Reporter`) *(L12)*"
+        },
+        {
+          "level": 3,
+          "title": "`repogpt/utils/__init__.py`"
+        },
+        {
+          "level": 3,
+          "title": "`repogpt/utils/file_utils.py`"
+        },
+        {
+          "level": 4,
+          "title": "Structure:"
+        },
+        {
+          "level": 4,
+          "title": "Function `calculate_file_hash` *(L12)*"
+        },
+        {
+          "level": 4,
+          "title": "Function `is_likely_binary` *(L42)*"
+        },
+        {
+          "level": 3,
+          "title": "`repogpt/utils/gitignore_handler.py`"
+        },
+        {
+          "level": 4,
+          "title": "Structure:"
+        },
+        {
+          "level": 4,
+          "title": "Function `_load_matcher_uncached` *(L23)*"
+        },
+        {
+          "level": 4,
+          "title": "Function `get_gitignore_matcher` *(L51)*"
+        },
+        {
+          "level": 4,
+          "title": "Function `is_path_ignored` *(L77)*"
+        },
+        {
+          "level": 3,
+          "title": "`repogpt/utils/logging.py`"
+        },
+        {
+          "level": 4,
+          "title": "Structure:"
+        },
+        {
+          "level": 4,
+          "title": "Function `configure_logging` *(L5)*"
+        },
+        {
+          "level": 3,
+          "title": "`repogpt/utils/text_processing.py`"
+        },
+        {
+          "level": 4,
+          "title": "Structure:"
+        },
+        {
+          "level": 4,
+          "title": "Function `extract_todos_fixmes_from_comments` *(L12)*"
+        },
+        {
+          "level": 4,
+          "title": "Function `extract_comments_from_content` *(L48)*"
+        },
+        {
+          "level": 4,
+          "title": "Function `count_blank_lines` *(L122)*"
+        },
+        {
+          "level": 3,
+          "title": "`requirements.txt`"
+        },
+        {
+          "level": 3,
+          "title": "`setup.py`"
+        },
+        {
+          "level": 4,
+          "title": "Structure:"
+        }
+      ],
+      "links": [],
+      "code_blocks": 35,
+      "content_preview": "# RepoGPT Analysis Report\n\n## Dependencies Found\n\n- Files: `requirements.txt`\n  *(Run with `--dependencies` for details)*\n\n\n## File Details\n\n### `.gitignore`\n- **Lines:** 166\n\n*Structure information not available for this file type or parsing failed early.*\n\n---\n\n### `.trunk/.gitignore`\n- **Lines:** 9\n\n*Structure information not available for this file type or parsing failed early.*\n\n---\n\n### `.trunk/configs/.isort.cfg`\n- **Lines:** 2\n\n*Structure information not available for this file type or p...",
+      "blank_lines": 282,
+      "comments_count": 0,
+      "todos_fixmes": {
+        "todos": [],
+        "fixmes": []
+      }
+    },
+    "repogpt/codigo_concatenado.txt": {
+      "path": "/home/jd/Documentos/CODE-2025/LLMTools/RepoGPT/repogpt/codigo_concatenado.txt",
+      "size": 129745,
+      "hash": "b0efb140cb10eeae7f56a42f0f745fff4a8fb33bab2440d85657d6d70f2bd68c",
+      "line_count": 2819,
+      "content_preview": "# ==================== INICIO: ./__init__.py ====================\n# repogpt/__init__.py\n\n# Versión del paquete\n__version__ = \"0.2.0\" # Actualizar según sea necesario\n\n# Opcional: importar elementos clave para acceso directo\n# from .analyzer import RepositoryAnalyzer\n# from .exceptions import RepoGPTException\n\n# Configurar un logger NullHandler por defecto para evitar mensajes si la app\n# que usa la librería no configura logging.\nimport logging\nlogging.getLogger(__name__).addHandler(logging.NullH...",
+      "todos_fixmes": {
+        "todos": [],
+        "fixmes": []
+      },
+      "comments_count": 8,
+      "blank_lines": 431
+    },
+    "repogpt/exceptions.py": {
+      "path": "/home/jd/Documentos/CODE-2025/LLMTools/RepoGPT/repogpt/exceptions.py",
+      "size": 895,
+      "hash": "95753017a123c681cdb955968be6ee060551dc7f309bc7ced8fe45b6d3298444",
+      "line_count": 26,
+      "structure": [
+        {
+          "type": "class",
+          "name": "RepoGPTException",
+          "docstring": "Clase base para excepciones específicas de RepoGPT.",
+          "line_start": 3,
+          "line_end": 5,
+          "bases": [
+            "Exception"
+          ],
+          "decorators": [],
+          "body": []
+        },
+        {
+          "type": "class",
+          "name": "ConfigurationError",
+          "docstring": "Error relacionado con la configuración del análisis.",
+          "line_start": 7,
+          "line_end": 9,
+          "bases": [
+            "RepoGPTException"
+          ],
+          "decorators": [],
+          "body": []
+        },
+        {
+          "type": "class",
+          "name": "ParsingError",
+          "docstring": "Error durante la fase de parsing de un archivo.",
+          "line_start": 11,
+          "line_end": 18,
+          "bases": [
+            "RepoGPTException"
+          ],
+          "decorators": [],
+          "body": [
+            {
+              "type": "method",
+              "name": "__init__",
+              "docstring": null,
+              "line_start": 13,
+              "line_end": 18,
+              "arguments": [
+                "self",
+                "message: str",
+                "file_path: str = None",
+                "parser_name: str = None"
+              ],
+              "returns": null,
+              "is_async": false,
+              "decorators": []
+            }
+          ]
+        },
+        {
+          "type": "class",
+          "name": "AnalysisError",
+          "docstring": "Error durante la fase principal de análisis del repositorio.",
+          "line_start": 20,
+          "line_end": 22,
+          "bases": [
+            "RepoGPTException"
+          ],
+          "decorators": [],
+          "body": []
+        },
+        {
+          "type": "class",
+          "name": "ReportingError",
+          "docstring": "Error durante la generación del reporte.",
+          "line_start": 24,
+          "line_end": 26,
+          "bases": [
+            "RepoGPTException"
+          ],
+          "decorators": [],
+          "body": []
+        }
+      ],
+      "todos_fixmes": {
+        "todos": [],
+        "fixmes": []
+      },
+      "blank_lines": 5,
+      "comments_count": 1
+    },
+    "repogpt/__main__.py": {
+      "path": "/home/jd/Documentos/CODE-2025/LLMTools/RepoGPT/repogpt/__main__.py",
+      "size": 10478,
+      "hash": "dc69ebbe1e6472c8354d1a27621015338d69d46e25cac12f7a5ffd62b6998001",
+      "line_count": 260,
+      "structure": [
+        {
+          "type": "import",
+          "line_start": 2,
+          "line_end": 2,
+          "value": "import argparse"
+        },
+        {
+          "type": "import",
+          "line_start": 3,
+          "line_end": 3,
+          "value": "import logging"
+        },
+        {
+          "type": "import",
+          "line_start": 4,
+          "line_end": 4,
+          "value": "from pathlib import Path"
+        },
+        {
+          "type": "import",
+          "line_start": 5,
+          "line_end": 5,
+          "value": "from typing import List, Dict, Union, Any"
+        },
+        {
+          "type": "import",
+          "line_start": 7,
+          "line_end": 7,
+          "value": "from repogpt.analyzer import RepositoryAnalyzer"
+        },
+        {
+          "type": "import",
+          "line_start": 8,
+          "line_end": 8,
+          "value": "from repogpt.utils.logging import configure_logging"
+        },
+        {
+          "type": "import",
+          "line_start": 9,
+          "line_end": 9,
+          "value": "from repogpt.extractors import base as extractor_base"
+        },
+        {
+          "type": "import",
+          "line_start": 11,
+          "line_end": 11,
+          "value": "from repogpt.extractors import dependencies, git, metrics, todos"
+        },
+        {
+          "type": "import",
+          "line_start": 12,
+          "line_end": 12,
+          "value": "from repogpt.reporting import base as reporter_base"
+        },
+        {
+          "type": "import",
+          "line_start": 13,
+          "line_end": 13,
+          "value": "from repogpt.reporting import json_reporter, markdown_reporter"
+        },
+        {
+          "type": "import",
+          "line_start": 14,
+          "line_end": 14,
+          "value": "from repogpt.exceptions import RepoGPTException"
+        },
+        {
+          "type": "function",
+          "name": "main",
+          "docstring": null,
+          "line_start": 31,
+          "line_end": 257,
+          "arguments": [],
+          "returns": null,
+          "is_async": false,
+          "decorators": []
+        }
+      ],
+      "todos_fixmes": {
+        "todos": [
+          {
+            "line": 65,
+            "message": "s' es necesario para el conteo por archivo y la sección opcional"
+          },
+          {
+            "line": 68,
+            "message": "s por ahora"
+          },
+          {
+            "line": 152,
+            "message": "s' también es necesario para el conteo por archivo (comportamiento por defecto)"
+          }
+        ],
+        "fixmes": []
+      },
+      "blank_lines": 27,
+      "comments_count": 33
+    },
+    "repogpt/parsers/dockerfile_.py": {
+      "path": "/home/jd/Documentos/CODE-2025/LLMTools/RepoGPT/repogpt/parsers/dockerfile_.py",
+      "size": 8901,
+      "hash": "e20083de235bd24995737c49fab148ce5f03f9ce09dd1155424186ab76be147a",
+      "line_count": 172,
+      "structure": [
+        {
+          "type": "import",
+          "line_start": 2,
+          "line_end": 2,
+          "value": "import logging"
+        },
+        {
+          "type": "import",
+          "line_start": 3,
+          "line_end": 3,
+          "value": "import re"
+        },
+        {
+          "type": "import",
+          "line_start": 4,
+          "line_end": 4,
+          "value": "from pathlib import Path"
+        },
+        {
+          "type": "import",
+          "line_start": 5,
+          "line_end": 5,
+          "value": "from typing import Any, Dict, List"
+        },
+        {
+          "type": "import",
+          "line_start": 8,
+          "line_end": 8,
+          "value": "from base import Parser, register_parser"
+        },
+        {
+          "type": "class",
+          "name": "DockerfileParser",
+          "docstring": "Parsea archivos Dockerfile.",
+          "line_start": 12,
+          "line_end": 166,
+          "bases": [
+            "Parser"
+          ],
+          "decorators": [],
+          "body": [
+            {
+              "type": "method",
+              "name": "parse",
+              "docstring": "Extrae instrucciones, argumentos, imágenes base, puertos y tareas.",
+              "line_start": 40,
+              "line_end": 166,
+              "arguments": [
+                "self",
+                "file_path: Path",
+                "file_info: Dict[str, Any]"
+              ],
+              "returns": "Dict[str, Any]",
+              "is_async": false,
+              "decorators": []
+            }
+          ]
+        }
+      ],
+      "todos_fixmes": {
+        "todos": [
+          {
+            "line": 36,
+            "message": "/FIXME dentro de comentarios"
+          },
+          {
+            "line": 54,
+            "message": "el contenido manejando continuaciones de línea (escaped newlines)"
+          },
+          {
+            "line": 61,
+            "message": "s"
+          },
+          {
+            "line": 64,
+            "message": "s"
+          },
+          {
+            "line": 74,
+            "message": "s/FIXMEs dentro de comentarios"
+          }
+        ],
+        "fixmes": []
+      },
+      "blank_lines": 23,
+      "comments_count": 45
+    },
+    "repogpt/extractors/git.py": {
+      "path": "/home/jd/Documentos/CODE-2025/LLMTools/RepoGPT/repogpt/extractors/git.py",
+      "size": 3915,
+      "hash": "25d50c974a0b0729f0eac6a0d359cdc4312064611fbe040c2d0472007caae3e9",
+      "line_count": 82,
+      "structure": [
+        {
+          "type": "import",
+          "line_start": 2,
+          "line_end": 2,
+          "value": "import logging"
+        },
+        {
+          "type": "import",
+          "line_start": 3,
+          "line_end": 3,
+          "value": "import subprocess"
+        },
+        {
+          "type": "import",
+          "line_start": 4,
+          "line_end": 4,
+          "value": "from pathlib import Path"
+        },
+        {
+          "type": "import",
+          "line_start": 5,
+          "line_end": 5,
+          "value": "from typing import Any, Dict"
+        },
+        {
+          "type": "import",
+          "line_start": 7,
+          "line_end": 7,
+          "value": "from base import ExtractorModule"
+        },
+        {
+          "type": "import",
+          "line_start": 8,
+          "line_end": 8,
+          "value": "from repogpt.analyzer import RepositoryAnalyzer"
+        },
+        {
+          "type": "class",
+          "name": "GitInfoExtractor",
+          "docstring": "Extrae información del repositorio Git si existe.",
+          "line_start": 12,
+          "line_end": 82,
+          "bases": [
+            "ExtractorModule"
+          ],
+          "decorators": [],
+          "body": [
+            {
+              "type": "method",
+              "name": "extract",
+              "docstring": "Ejecuta comandos git para obtener información del último commit, rama, etc.",
+              "line_start": 15,
+              "line_end": 82,
+              "arguments": [
+                "self",
+                "analyzer: RepositoryAnalyzer",
+                "analyzed_data: Dict[str, Any]"
+              ],
+              "returns": "Dict[str, Any]",
+              "is_async": false,
+              "decorators": []
+            }
+          ]
+        }
+      ],
+      "todos_fixmes": {
+        "todos": [],
+        "fixmes": []
+      },
+      "blank_lines": 10,
+      "comments_count": 12
+    },
+    "repogpt/reporting/base.py": {
+      "path": "/home/jd/Documentos/CODE-2025/LLMTools/RepoGPT/repogpt/reporting/base.py",
+      "size": 612,
+      "hash": "ed9de10f130c502b1682f2409f1087617f02b539219dee404c5f9df0ce3c4a3c",
+      "line_count": 21,
+      "structure": [
+        {
+          "type": "import",
+          "line_start": 3,
+          "line_end": 3,
+          "value": "import abc"
+        },
+        {
+          "type": "import",
+          "line_start": 4,
+          "line_end": 4,
+          "value": "from typing import Any, Dict"
+        },
+        {
+          "type": "class",
+          "name": "Reporter",
+          "docstring": "Clase base abstracta para generadores de reportes.",
+          "line_start": 6,
+          "line_end": 21,
+          "bases": [
+            "abc.ABC"
+          ],
+          "decorators": [],
+          "body": [
+            {
+              "type": "method",
+              "name": "generate",
+              "docstring": "\n        Genera el contenido del reporte a partir de los datos analizados.\n\n        Args:\n            analysis_data: El diccionario completo que contiene todos los datos\n                           recopilados por el analizador y los extractores.\n\n        Returns:\n            Una cadena de texto que representa el reporte formateado.\n        ",
+              "line_start": 10,
+              "line_end": 21,
+              "arguments": [
+                "self",
+                "analysis_data: Dict[str, Any]"
+              ],
+              "returns": "str",
+              "is_async": false,
+              "decorators": [
+                "@abc.abstractmethod"
+              ]
+            }
+          ]
+        }
+      ],
+      "todos_fixmes": {
+        "todos": [],
+        "fixmes": []
+      },
+      "blank_lines": 5,
+      "comments_count": 1
+    },
+    "repogpt/parsers/markdown.py": {
+      "path": "/home/jd/Documentos/CODE-2025/LLMTools/RepoGPT/repogpt/parsers/markdown.py",
+      "size": 2760,
+      "hash": "3335ac374ec4169c954b16cc1d52d597064669d10db56d018791b015a695d55e",
+      "line_count": 59,
+      "structure": [
+        {
+          "type": "import",
+          "line_start": 2,
+          "line_end": 2,
+          "value": "import logging"
+        },
+        {
+          "type": "import",
+          "line_start": 3,
+          "line_end": 3,
+          "value": "import re"
+        },
+        {
+          "type": "import",
+          "line_start": 4,
+          "line_end": 4,
+          "value": "from pathlib import Path"
+        },
+        {
+          "type": "import",
+          "line_start": 5,
+          "line_end": 5,
+          "value": "from typing import Any, Dict"
+        },
+        {
+          "type": "import",
+          "line_start": 7,
+          "line_end": 7,
+          "value": "from base import Parser, register_parser"
+        },
+        {
+          "type": "import",
+          "line_start": 8,
+          "line_end": 8,
+          "value": "from utils.text_processing import extract_comments_from_content, extract_todos_fixmes_from_comments, count_blank_lines"
+        },
+        {
+          "type": "class",
+          "name": "MarkdownParser",
+          "docstring": "Parsea archivos Markdown (.md, .mdx).",
+          "line_start": 12,
+          "line_end": 55,
+          "bases": [
+            "Parser"
+          ],
+          "decorators": [],
+          "body": [
+            {
+              "type": "method",
+              "name": "parse",
+              "docstring": "Extrae encabezados, links y fragmentos de código.",
+              "line_start": 15,
+              "line_end": 55,
+              "arguments": [
+                "self",
+                "file_path: Path",
+                "file_info: Dict[str, Any]"
+              ],
+              "returns": "Dict[str, Any]",
+              "is_async": false,
+              "decorators": []
+            }
+          ]
+        }
+      ],
+      "todos_fixmes": {
+        "todos": [
+          {
+            "line": 45,
+            "message": "s/FIXMEs"
+          }
+        ],
+        "fixmes": []
+      },
+      "blank_lines": 11,
+      "comments_count": 11
+    },
+    "repogpt/parsers/python.py": {
+      "path": "/home/jd/Documentos/CODE-2025/LLMTools/RepoGPT/repogpt/parsers/python.py",
+      "size": 14955,
+      "hash": "717f0f1ea82b0905c25cecd7f3309c64b8d9fe07c74496b8e9d2199b158be4ef",
+      "line_count": 304,
+      "structure": [
+        {
+          "type": "import",
+          "line_start": 4,
+          "line_end": 4,
+          "value": "import ast"
+        },
+        {
+          "type": "import",
+          "line_start": 5,
+          "line_end": 5,
+          "value": "import logging"
+        },
+        {
+          "type": "import",
+          "line_start": 6,
+          "line_end": 6,
+          "value": "from pathlib import Path"
+        },
+        {
+          "type": "import",
+          "line_start": 7,
+          "line_end": 7,
+          "value": "from typing import Any, Dict, List, Union"
+        },
+        {
+          "type": "import",
+          "line_start": 8,
+          "line_end": 8,
+          "value": "import tokenize"
+        },
+        {
+          "type": "import",
+          "line_start": 11,
+          "line_end": 11,
+          "value": "from base import Parser, register_parser"
+        },
+        {
+          "type": "import",
+          "line_start": 12,
+          "line_end": 12,
+          "value": "from utils.text_processing import extract_todos_fixmes_from_comments, count_blank_lines"
+        },
+        {
+          "type": "function",
+          "name": "get_comment_text",
+          "docstring": "Extrae el texto limpio de un token de comentario.",
+          "line_start": 16,
+          "line_end": 20,
+          "arguments": [
+            "comment_token: tokenize.TokenInfo"
+          ],
+          "returns": "str",
+          "is_async": false,
+          "decorators": []
+        },
+        {
+          "type": "class",
+          "name": "PythonParser",
+          "docstring": "\n    Parsea archivos Python (.py) usando ast y tokenize.\n    Extrae una estructura ordenada de elementos: imports, comentarios,\n    clases (con métodos y docstrings) y funciones (con docstrings).\n    ",
+          "line_start": 22,
+          "line_end": 299,
+          "bases": [
+            "Parser"
+          ],
+          "decorators": [],
+          "body": [
+            {
+              "type": "method",
+              "name": "parse",
+              "docstring": "Analiza el archivo Python para extraer su estructura ordenada.",
+              "line_start": 29,
+              "line_end": 124,
+              "arguments": [
+                "self",
+                "file_path: Path",
+                "file_info: Dict[str, Any]"
+              ],
+              "returns": "Dict[str, Any]",
+              "is_async": false,
+              "decorators": []
+            },
+            {
+              "type": "method",
+              "name": "_get_node_end_lineno",
+              "docstring": "Obtiene la línea final de un nodo AST, manejando nodos sin end_lineno.",
+              "line_start": 126,
+              "line_end": 128,
+              "arguments": [
+                "self",
+                "node: ast.AST"
+              ],
+              "returns": "int",
+              "is_async": false,
+              "decorators": []
+            },
+            {
+              "type": "method",
+              "name": "_parse_import",
+              "docstring": "Extrae información de una declaración de import.",
+              "line_start": 130,
+              "line_end": 143,
+              "arguments": [
+                "self",
+                "node: Union[ast.Import, ast.ImportFrom]"
+              ],
+              "returns": "Dict[str, Any]",
+              "is_async": false,
+              "decorators": []
+            },
+            {
+              "type": "method",
+              "name": "_parse_class",
+              "docstring": "Extrae información detallada de una definición de clase y su cuerpo.",
+              "line_start": 145,
+              "line_end": 173,
+              "arguments": [
+                "self",
+                "node: ast.ClassDef"
+              ],
+              "returns": "Dict[str, Any]",
+              "is_async": false,
+              "decorators": []
+            },
+            {
+              "type": "method",
+              "name": "_parse_function",
+              "docstring": "Extrae información detallada de una definición de función/método.",
+              "line_start": 175,
+              "line_end": 188,
+              "arguments": [
+                "self",
+                "node: Union[ast.FunctionDef, ast.AsyncFunctionDef]",
+                "is_method = False",
+                "clean_docstring = True"
+              ],
+              "returns": "Dict[str, Any]",
+              "is_async": false,
+              "decorators": []
+            },
+            {
+              "type": "method",
+              "name": "_get_decorator_names",
+              "docstring": "Intenta obtener los nombres de los decoradores usando ast.unparse.",
+              "line_start": 190,
+              "line_end": 204,
+              "arguments": [
+                "self",
+                "decorator_list: List[ast.expr]"
+              ],
+              "returns": "List[str]",
+              "is_async": false,
+              "decorators": []
+            },
+            {
+              "type": "method",
+              "name": "_get_qual_names",
+              "docstring": "Intenta obtener nombres calificados (ej. module.Class) usando ast.unparse.",
+              "line_start": 206,
+              "line_end": 215,
+              "arguments": [
+                "self",
+                "nodes: List[ast.expr]"
+              ],
+              "returns": "List[str]",
+              "is_async": false,
+              "decorators": []
+            },
+            {
+              "type": "method",
+              "name": "_format_arguments",
+              "docstring": "Formatea los argumentos de una función/método a una lista de strings.",
+              "line_start": 217,
+              "line_end": 299,
+              "arguments": [
+                "self",
+                "args: ast.arguments"
+              ],
+              "returns": "List[str]",
+              "is_async": false,
+              "decorators": []
+            }
+          ]
+        }
+      ],
+      "todos_fixmes": {
+        "todos": [
+          {
+            "line": 47,
+            "message": "s: List[Dict[str, Any]] = []"
+          },
+          {
+            "line": 49,
+            "message": "|FIXME)[\\s:]?(.*)', re.IGNORECASE)"
+          },
+          {
+            "line": 69,
+            "message": "s/FIXMEs de los comentarios extraídos"
+          },
+          {
+            "line": 90,
+            "message": "s tengan line_start antes de ordenar"
+          },
+          {
+            "line": 157,
+            "message": "s, asignaciones, comentarios internos, etc.)"
+          }
+        ],
+        "fixmes": [
+          {
+            "line": 48,
+            "message": "s: List[Dict[str, Any]] = []"
+          }
+        ]
+      },
+      "blank_lines": 38,
+      "comments_count": 60
+    },
+    "README.es": {
+      "path": "/home/jd/Documentos/CODE-2025/LLMTools/RepoGPT/README.es",
+      "size": 6834,
+      "hash": "a413b78d4281bf74355a45afa50a10758fce5d5b94a6c40bbdcf7fbf2c580268",
+      "line_count": 201,
+      "content_preview": "Claro, la descripción original ya es bastante buena: es exhaustiva, bien estructurada y clara. Sin embargo, siempre es posible mejorar ciertos aspectos, principalmente desde estas perspectivas:\n\n- **Claridad y precisión del lenguaje**\n- **Mayor énfasis en los casos prácticos y utilidades reales**\n- **Reducción de redundancias**\n- **Inclusión de contexto sobre beneficios y casos de uso específicos**\n- **Consistencia en estilo y formatos**\n\nAquí tienes una versión mejorada y optimizada de la docum...",
+      "todos_fixmes": {
+        "todos": [],
+        "fixmes": []
+      },
+      "comments_count": 0,
+      "blank_lines": 56
+    },
+    "README.md": {
+      "path": "/home/jd/Documentos/CODE-2025/LLMTools/RepoGPT/README.md",
+      "size": 8884,
+      "hash": "4278759a82213d228680ff7d0f1fa491ad62e8efa9a83bef86e437f8ab90e26e",
+      "line_count": 207,
+      "headings": [
+        {
+          "level": 1,
+          "title": "RepoGPT"
+        },
+        {
+          "level": 1,
+          "title": "Features"
+        },
+        {
+          "level": 1,
+          "title": "Installing"
+        },
+        {
+          "level": 2,
+          "title": "Prerequisites"
+        },
+        {
+          "level": 2,
+          "title": "Installation Steps"
+        },
+        {
+          "level": 1,
+          "title": "Using RepoGPT"
+        },
+        {
+          "level": 1,
+          "title": "Save default Markdown report"
+        },
+        {
+          "level": 1,
+          "title": "Save JSON report"
+        },
+        {
+          "level": 1,
+          "title": "Or shorter: repogpt -f json -o my_report.json"
+        },
+        {
+          "level": 1,
+          "title": "Analyze the 'src' folder within the project at 'path/to/your/code'"
+        },
+        {
+          "level": 1,
+          "title": "How To Use - Examples"
+        },
+        {
+          "level": 1,
+          "title": "Command-Line Options (Advanced Usage)"
+        },
+        {
+          "level": 1,
+          "title": "Project Structure (RepoGPT Tool Itself)"
+        }
+      ],
+      "links": [
+        {
+          "text": "gpt-repository-loader",
+          "url": "https://github.com/mpoon/gpt-repository-loader"
+        },
+        {
+          "text": "gptrepo",
+          "url": "https://github.com/zackees/gptrepo/tree/main"
+        }
+      ],
+      "code_blocks": 6,
+      "content_preview": "# RepoGPT\n\nRepoGPT analyzes software repos and creates structured summaries suitable for fast ingestion by Large Language Models (LLMs) or for human review. It iterates through project directories, parses various file types, extracts structural information, metadata, tasks , and generates comprehensive reports in Markdown or JSON formats.\n\nInspired by [gpt-repository-loader](https://github.com/mpoon/gpt-repository-loader) and [gptrepo](https://github.com/zackees/gptrepo/tree/main).\n\n# Features\n\n...",
+      "blank_lines": 37,
+      "comments_count": 0,
+      "todos_fixmes": {
+        "todos": [],
+        "fixmes": []
+      }
+    },
+    "repogpt/extractors/metrics.py": {
+      "path": "/home/jd/Documentos/CODE-2025/LLMTools/RepoGPT/repogpt/extractors/metrics.py",
+      "size": 3979,
+      "hash": "5da842d095ed863b66873ce016235d8428ef6131ceef595ccfb65618859862ed",
+      "line_count": 90,
+      "structure": [
+        {
+          "type": "import",
+          "line_start": 2,
+          "line_end": 2,
+          "value": "import logging"
+        },
+        {
+          "type": "import",
+          "line_start": 3,
+          "line_end": 3,
+          "value": "from pathlib import Path"
+        },
+        {
+          "type": "import",
+          "line_start": 4,
+          "line_end": 4,
+          "value": "from typing import Any, Dict"
+        },
+        {
+          "type": "import",
+          "line_start": 6,
+          "line_end": 6,
+          "value": "from base import ExtractorModule"
+        },
+        {
+          "type": "import",
+          "line_start": 7,
+          "line_end": 7,
+          "value": "from repogpt.analyzer import RepositoryAnalyzer"
+        },
+        {
+          "type": "class",
+          "name": "CodeMetricsExtractor",
+          "docstring": "Calcula métricas básicas del código analizado.",
+          "line_start": 11,
+          "line_end": 90,
+          "bases": [
+            "ExtractorModule"
+          ],
+          "decorators": [],
+          "body": [
+            {
+              "type": "method",
+              "name": "extract",
+              "docstring": "Calcula totales y estadísticas por tipo de archivo.",
+              "line_start": 14,
+              "line_end": 90,
+              "arguments": [
+                "self",
+                "analyzer: RepositoryAnalyzer",
+                "analyzed_data: Dict[str, Any]"
+              ],
+              "returns": "Dict[str, Any]",
+              "is_async": false,
+              "decorators": []
+            }
+          ]
+        }
+      ],
+      "todos_fixmes": {
+        "todos": [],
+        "fixmes": []
+      },
+      "blank_lines": 17,
+      "comments_count": 13
+    },
+    "repogpt/parsers/__init__.py": {
+      "path": "/home/jd/Documentos/CODE-2025/LLMTools/RepoGPT/repogpt/parsers/__init__.py",
+      "size": 365,
+      "hash": "87515df097b2d7bed81205cd3110e3763b2f2aa0f42af5b2bade539545ca5d23",
+      "line_count": 15,
+      "structure": [
+        {
+          "type": "import",
+          "line_start": 2,
+          "line_end": 2,
+          "value": "import logging"
+        },
+        {
+          "type": "import",
+          "line_start": 3,
+          "line_end": 3,
+          "value": "from . import python"
+        },
+        {
+          "type": "import",
+          "line_start": 4,
+          "line_end": 4,
+          "value": "from . import markdown"
+        },
+        {
+          "type": "import",
+          "line_start": 5,
+          "line_end": 5,
+          "value": "from . import javascript"
+        },
+        {
+          "type": "import",
+          "line_start": 6,
+          "line_end": 6,
+          "value": "from . import yaml_parser"
+        },
+        {
+          "type": "import",
+          "line_start": 7,
+          "line_end": 7,
+          "value": "from . import html"
+        },
+        {
+          "type": "import",
+          "line_start": 9,
+          "line_end": 9,
+          "value": "from . import generic"
+        },
+        {
+          "type": "import",
+          "line_start": 13,
+          "line_end": 13,
+          "value": "from base import get_parser"
+        }
+      ],
+      "todos_fixmes": {
+        "todos": [],
+        "fixmes": []
+      },
+      "blank_lines": 3,
+      "comments_count": 4
+    },
+    "repogpt/__init__.py": {
+      "path": "/home/jd/Documentos/CODE-2025/LLMTools/RepoGPT/repogpt/__init__.py",
+      "size": 446,
+      "hash": "57012e271a5d7c9c8c46f9bcd567e48656b4a7acb77025d7297e1555a8063570",
+      "line_count": 13,
+      "structure": [
+        {
+          "type": "import",
+          "line_start": 12,
+          "line_end": 12,
+          "value": "import logging"
+        }
+      ],
+      "todos_fixmes": {
+        "todos": [],
+        "fixmes": []
+      },
+      "blank_lines": 3,
+      "comments_count": 8
+    },
+    "repogpt/reporting/__init__.py": {
+      "path": "/home/jd/Documentos/CODE-2025/LLMTools/RepoGPT/repogpt/reporting/__init__.py",
+      "size": 221,
+      "hash": "d766de19b41442bf184d71f6b0d8d4800aa6cf5c7cdd8e727d49c589306de1e1",
+      "line_count": 12,
+      "structure": [
+        {
+          "type": "import",
+          "line_start": 3,
+          "line_end": 3,
+          "value": "from . import json_reporter"
+        },
+        {
+          "type": "import",
+          "line_start": 4,
+          "line_end": 4,
+          "value": "from . import markdown_reporter"
+        },
+        {
+          "type": "import",
+          "line_start": 6,
+          "line_end": 6,
+          "value": "from base import Reporter"
+        }
+      ],
+      "todos_fixmes": {
+        "todos": [],
+        "fixmes": []
+      },
+      "blank_lines": 3,
+      "comments_count": 2
+    },
+    "repogpt/parsers/generic.py": {
+      "path": "/home/jd/Documentos/CODE-2025/LLMTools/RepoGPT/repogpt/parsers/generic.py",
+      "size": 4483,
+      "hash": "ae698e48b37091bd9b818b0d54410936831e78d2753841bcfb44e5568d0f37a3",
+      "line_count": 88,
+      "structure": [
+        {
+          "type": "import",
+          "line_start": 2,
+          "line_end": 2,
+          "value": "import logging"
+        },
+        {
+          "type": "import",
+          "line_start": 3,
+          "line_end": 3,
+          "value": "from pathlib import Path"
+        },
+        {
+          "type": "import",
+          "line_start": 4,
+          "line_end": 4,
+          "value": "from typing import Any, Dict, List"
+        },
+        {
+          "type": "import",
+          "line_start": 6,
+          "line_end": 6,
+          "value": "from base import Parser"
+        },
+        {
+          "type": "import",
+          "line_start": 8,
+          "line_end": 11,
+          "value": "from utils.text_processing import extract_comments_from_content, extract_todos_fixmes_from_comments"
+        },
+        {
+          "type": "class",
+          "name": "GenericTextParser",
+          "docstring": "Parser genérico para archivos de texto no reconocidos por otros parsers.",
+          "line_start": 16,
+          "line_end": 88,
+          "bases": [
+            "Parser"
+          ],
+          "decorators": [],
+          "body": [
+            {
+              "type": "method",
+              "name": "parse",
+              "docstring": "Extrae información básica como conteo de líneas y TODOs/FIXMEs usando streaming.",
+              "line_start": 19,
+              "line_end": 88,
+              "arguments": [
+                "self",
+                "file_path: Path",
+                "file_info: Dict[str, Any]"
+              ],
+              "returns": "Dict[str, Any]",
+              "is_async": false,
+              "decorators": []
+            }
+          ]
+        }
+      ],
+      "todos_fixmes": {
+        "todos": [
+          {
+            "line": 41,
+            "message": "s aquí línea por línea"
+          },
+          {
+            "line": 56,
+            "message": "s"
+          },
+          {
+            "line": 70,
+            "message": "s/FIXMEs genéricos (buscar en comentarios #, //)"
+          }
+        ],
+        "fixmes": []
+      },
+      "blank_lines": 16,
+      "comments_count": 25
+    },
+    "LICENSE": {
+      "path": "/home/jd/Documentos/CODE-2025/LLMTools/RepoGPT/LICENSE",
+      "size": 1065,
+      "hash": "2412a38d39c9169aee50f8427adf22f83567e119f01e59fc66f8f331f632930d",
+      "line_count": 21,
+      "content_preview": "MIT License\n\nCopyright (c) 2025 MrCabss69\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright not...",
+      "todos_fixmes": {
+        "todos": [],
+        "fixmes": []
+      },
+      "comments_count": 0,
+      "blank_lines": 4
+    },
+    "setup.py": {
+      "path": "/home/jd/Documentos/CODE-2025/LLMTools/RepoGPT/setup.py",
+      "size": 2326,
+      "hash": "80b4ee1cc58cc663c0eeb9172378c5558bc024c892f6ef95bbfb1aed27dda67e",
+      "line_count": 63,
+      "structure": [
+        {
+          "type": "import",
+          "line_start": 3,
+          "line_end": 3,
+          "value": "from setuptools import setup, find_packages"
+        }
+      ],
+      "todos_fixmes": {
+        "todos": [
+          {
+            "line": 22,
+            "message": ""
+          }
+        ],
+        "fixmes": []
+      },
+      "blank_lines": 5,
+      "comments_count": 20
+    },
+    "repogpt/parsers/html.py": {
+      "path": "/home/jd/Documentos/CODE-2025/LLMTools/RepoGPT/repogpt/parsers/html.py",
+      "size": 2388,
+      "hash": "f876bf4fbaf24b0ac9fd72ea175544026e47912b15aaacdec54d9e5a092c475c",
+      "line_count": 54,
+      "structure": [
+        {
+          "type": "import",
+          "line_start": 2,
+          "line_end": 2,
+          "value": "import logging"
+        },
+        {
+          "type": "import",
+          "line_start": 3,
+          "line_end": 3,
+          "value": "import re"
+        },
+        {
+          "type": "import",
+          "line_start": 4,
+          "line_end": 4,
+          "value": "from pathlib import Path"
+        },
+        {
+          "type": "import",
+          "line_start": 5,
+          "line_end": 5,
+          "value": "from typing import Any, Dict"
+        },
+        {
+          "type": "import",
+          "line_start": 7,
+          "line_end": 7,
+          "value": "from base import Parser, register_parser"
+        },
+        {
+          "type": "import",
+          "line_start": 8,
+          "line_end": 8,
+          "value": "from utils.text_processing import extract_comments_from_content, extract_todos_fixmes_from_comments, count_blank_lines"
+        },
+        {
+          "type": "class",
+          "name": "HtmlParser",
+          "docstring": "Parsea archivos HTML (.html, .htm).",
+          "line_start": 13,
+          "line_end": 50,
+          "bases": [
+            "Parser"
+          ],
+          "decorators": [],
+          "body": [
+            {
+              "type": "method",
+              "name": "parse",
+              "docstring": "Extrae título, scripts y links.",
+              "line_start": 16,
+              "line_end": 50,
+              "arguments": [
+                "self",
+                "file_path: Path",
+                "file_info: Dict[str, Any]"
+              ],
+              "returns": "Dict[str, Any]",
+              "is_async": false,
+              "decorators": []
+            }
+          ]
+        }
+      ],
+      "todos_fixmes": {
+        "todos": [
+          {
+            "line": 25,
+            "message": "s/FIXMEs"
+          }
+        ],
+        "fixmes": []
+      },
+      "blank_lines": 14,
+      "comments_count": 6
+    },
+    "repogpt/extractors/structure.py": {
+      "path": "/home/jd/Documentos/CODE-2025/LLMTools/RepoGPT/repogpt/extractors/structure.py",
+      "size": 2781,
+      "hash": "417706be65f9138f28ec435f329ce3a8fb36010403d54597c325fd3f99711546",
+      "line_count": 59,
+      "structure": [
+        {
+          "type": "import",
+          "line_start": 2,
+          "line_end": 2,
+          "value": "import logging"
+        },
+        {
+          "type": "import",
+          "line_start": 3,
+          "line_end": 3,
+          "value": "from pathlib import Path"
+        },
+        {
+          "type": "import",
+          "line_start": 4,
+          "line_end": 4,
+          "value": "from typing import Any, Dict, List"
+        },
+        {
+          "type": "import",
+          "line_start": 6,
+          "line_end": 6,
+          "value": "from base import ExtractorModule"
+        },
+        {
+          "type": "import",
+          "line_start": 7,
+          "line_end": 7,
+          "value": "from repogpt.analyzer import RepositoryAnalyzer"
+        },
+        {
+          "type": "class",
+          "name": "StructureExtractor",
+          "docstring": "Extrae una visión general de la estructura (clases, funciones) por archivo.",
+          "line_start": 11,
+          "line_end": 59,
+          "bases": [
+            "ExtractorModule"
+          ],
+          "decorators": [],
+          "body": [
+            {
+              "type": "method",
+              "name": "extract",
+              "docstring": "Itera sobre los archivos analizados y extrae elementos estructurales clave.",
+              "line_start": 14,
+              "line_end": 59,
+              "arguments": [
+                "self",
+                "analyzer: RepositoryAnalyzer",
+                "analyzed_data: Dict[str, Any]"
+              ],
+              "returns": "Dict[str, Any]",
+              "is_async": false,
+              "decorators": []
+            }
+          ]
+        }
+      ],
+      "todos_fixmes": {
+        "todos": [],
+        "fixmes": []
+      },
+      "blank_lines": 14,
+      "comments_count": 10
+    },
+    ".trunk/configs/.isort.cfg": {
+      "path": "/home/jd/Documentos/CODE-2025/LLMTools/RepoGPT/.trunk/configs/.isort.cfg",
+      "size": 25,
+      "hash": "968e1af82279fb9bb4b6fd697ad2a83763eb6ca524403c42cf1f6f99707de619",
+      "line_count": 2,
+      "content_preview": "[settings]\nprofile=black\n",
+      "todos_fixmes": {
+        "todos": [],
+        "fixmes": []
+      },
+      "comments_count": 0,
+      "blank_lines": 0
+    },
+    ".trunk/configs/.markdownlint.yaml": {
+      "path": "/home/jd/Documentos/CODE-2025/LLMTools/RepoGPT/.trunk/configs/.markdownlint.yaml",
+      "size": 109,
+      "hash": "697b0377e423ca0f494859a15e68e4a7d6c7727c2fc4c816f0c8e1b4cad0d2ec",
+      "line_count": 2,
+      "top_level_keys": [
+        "extends"
+      ],
+      "structure_preview": {
+        "extends": "str"
+      },
+      "blank_lines": 0,
+      "comments_count": 1,
+      "todos_fixmes": {
+        "todos": [],
+        "fixmes": []
+      }
+    },
+    ".trunk/configs/ruff.toml": {
+      "path": "/home/jd/Documentos/CODE-2025/LLMTools/RepoGPT/.trunk/configs/ruff.toml",
+      "size": 175,
+      "hash": "7d5f27b2681ad76dbd0e5e9ff893f78f8c6ce0ade804de044322300b60e7a0c1",
+      "line_count": 5,
+      "content_preview": "# Generic, formatter-friendly config.\nselect = [\"B\", \"D3\", \"E\", \"F\"]\n\n# Never enforce `E501` (line length violations). This should be handled by formatters.\nignore = [\"E501\"]\n",
+      "todos_fixmes": {
+        "todos": [],
+        "fixmes": []
+      },
+      "comments_count": 2,
+      "blank_lines": 1
+    }
+  },
+  "git_info": {
+    "commit_hash": "2087f91e0d743eb996988ee026ce695db23d6413",
+    "commit_short_hash": "2087f91",
+    "commit_message": "RepoGPT 2.0 - cleaning",
+    "author_name": "Tu Nombre",
+    "author_email": "tu@email.com",
+    "commit_date": "2025-04-05T05:17:21+02:00",
+    "branch": "dev",
+    "tags": [],
+    "remotes": [
+      {
+        "name": "origin",
+        "url": "https://github.com/MrCabss69/RepoGPT.git"
+      },
+      {
+        "name": "origin",
+        "url": "https://github.com/MrCabss69/RepoGPT.git"
+      }
+    ]
+  },
+  "aggregated_tasks": {
+    "todos": {
+      "repogpt/parsers/yaml_parser.py": [
+        {
+          "line": 54,
+          "message": "s/FIXMEs"
+        }
+      ],
+      "repogpt/extractors/todos.py": [
+        {
+          "line": 1,
+          "message": "s.py"
+        }
+      ],
+      "repogpt/extractors/dependencies.py": [
+        {
+          "line": 30,
+          "message": "s de parseo"
+        },
+        {
+          "line": 67,
+          "message": "s de Parseo Específicos ---"
+        }
+      ],
+      "repogpt/parsers/base.py": [
+        {
+          "line": 138,
+          "message": "s los módulos de parser"
+        },
+        {
+          "line": 145,
+          "message": "s los parsers que crees"
+        }
+      ],
+      "repogpt/reporting/markdown_reporter.py": [
+        {
+          "line": 15,
+          "message": "generate ahora acepta 'report_options' (que será args)"
+        },
+        {
+          "line": 175,
+          "message": "s _render_structure, _render_function, _render_class sin cambios ---"
+        },
+        {
+          "line": 264,
+          "message": "s auxiliares _format_size, _append_task_section sin cambios ---"
+        },
+        {
+          "line": 273,
+          "message": "ahora solo se usa si se pide --tasks"
+        }
+      ],
+      "repogpt/utils/text_processing.py": [
+        {
+          "line": 8,
+          "message": "/FIXME, busca la palabra clave seguida opcionalmente"
+        },
+        {
+          "line": 79,
+          "message": "después del inicio del comentario"
+        }
+      ],
+      "repogpt/parsers/javascript.py": [
+        {
+          "line": 71,
+          "message": "s/FIXMEs"
+        },
+        {
+          "line": 81,
+          "message": "s eliminados"
+        },
+        {
+          "line": 84,
+          "message": "s eliminados"
+        }
+      ],
+      "repogpt/__main__.py": [
+        {
+          "line": 65,
+          "message": "s' es necesario para el conteo por archivo y la sección opcional"
+        },
+        {
+          "line": 68,
+          "message": "s por ahora"
+        },
+        {
+          "line": 152,
+          "message": "s' también es necesario para el conteo por archivo (comportamiento por defecto)"
+        }
+      ],
+      "repogpt/parsers/dockerfile_.py": [
+        {
+          "line": 36,
+          "message": "/FIXME dentro de comentarios"
+        },
+        {
+          "line": 54,
+          "message": "el contenido manejando continuaciones de línea (escaped newlines)"
+        },
+        {
+          "line": 61,
+          "message": "s"
+        },
+        {
+          "line": 64,
+          "message": "s"
+        },
+        {
+          "line": 74,
+          "message": "s/FIXMEs dentro de comentarios"
+        }
+      ],
+      "repogpt/parsers/markdown.py": [
+        {
+          "line": 45,
+          "message": "s/FIXMEs"
+        }
+      ],
+      "repogpt/parsers/python.py": [
+        {
+          "line": 47,
+          "message": "s: List[Dict[str, Any]] = []"
+        },
+        {
+          "line": 49,
+          "message": "|FIXME)[\\s:]?(.*)', re.IGNORECASE)"
+        },
+        {
+          "line": 69,
+          "message": "s/FIXMEs de los comentarios extraídos"
+        },
+        {
+          "line": 90,
+          "message": "s tengan line_start antes de ordenar"
+        },
+        {
+          "line": 157,
+          "message": "s, asignaciones, comentarios internos, etc.)"
+        }
+      ],
+      "repogpt/parsers/generic.py": [
+        {
+          "line": 41,
+          "message": "s aquí línea por línea"
+        },
+        {
+          "line": 56,
+          "message": "s"
+        },
+        {
+          "line": 70,
+          "message": "s/FIXMEs genéricos (buscar en comentarios #, //)"
+        }
+      ],
+      "setup.py": [
+        {
+          "line": 22,
+          "message": ""
+        }
+      ],
+      "repogpt/parsers/html.py": [
+        {
+          "line": 25,
+          "message": "s/FIXMEs"
+        }
+      ]
+    },
+    "fixmes": {
+      "repogpt/utils/text_processing.py": [
+        {
+          "line": 43,
+          "message": ""
+        }
+      ],
+      "repogpt/parsers/python.py": [
+        {
+          "line": 48,
+          "message": "s: List[Dict[str, Any]] = []"
+        }
+      ]
+    },
+    "total_todos": 34,
+    "total_fixmes": 2
+  },
+  "dependencies": {
+    "requirements.txt": [
+      "gitignore-parser>=0.1"
+    ]
+  },
+  "code_metrics": {
+    "total_files": 44,
+    "total_lines": 7685,
+    "total_size_bytes": 317052,
+    "total_comment_lines": 526,
+    "total_blank_lines": 1270,
+    "code_lines": 5889,
+    "files_by_extension": {
+      ".yaml": 2,
+      "_no_extension_": 3,
+      ".txt": 2,
+      ".py": 31,
+      ".md": 3,
+      ".es": 1,
+      ".cfg": 1,
+      ".toml": 1
+    },
+    "files_with_errors": 0,
+    "files_missing_line_data": 0
+  }
+}
