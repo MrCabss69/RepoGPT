@@ -1,0 +1,327 @@
+
+================================================================================
+FILE: tests/data/basic.py
+================================================================================
+
+class Test:
+    pass
+
+def foo():
+    pass
+
+
+
+================================================================================
+FILE: tests/data/docstring_examples.py
+================================================================================
+
+def foo():
+    """Docstring de foo"""
+    # Comentario entre docstring y código
+    pass
+
+class Bar:
+    """Docstring de clase"""
+    def baz(self):
+        """Docstring de método"""
+        pass
+
+
+
+================================================================================
+FILE: tests/data/edge_cases.py
+================================================================================
+
+# Este es un comentario normal
+a = "# Esto no es un comentario"
+# TODO: pendiente de implementar
+def foo():
+    pass
+# FIXME: caso raro
+
+"""
+Esto es un docstring
+# Esto no es un comentario real
+"""
+
+# Otro comentario
+
+
+
+================================================================================
+FILE: tests/data/edge_cases_blanklines.py
+================================================================================
+
+
+# Primeras dos líneas en blanco
+
+
+def bar():
+    pass
+
+    # Línea en blanco al final
+
+
+
+
+================================================================================
+FILE: tests/data/edge_cases_comments.py
+================================================================================
+
+# Este es un comentario con acento: áéíóú
+print("No es comentario # pero parece") # Comentario con emoji 😊
+x = "# Esto tampoco es comentario"
+y = 42 #TODO: tarea pendiente λ
+def foo():
+    '''Este docstring contiene # pero no es comentario'''
+    pass
+# Línea sólo con comentario
+#
+#Comentario sin espacio tras hash
+#    Comentario con indentación
+# FIXME — revisar símbolos matemáticos: ∑, π, √
+
+
+
+================================================================================
+FILE: tests/unit/adapters/parsers/test_md_parser.py
+================================================================================
+
+import os
+from pathlib import Path
+from repogpt.adapters.parser.md_parser import MarkdownParser
+from repogpt.models import ParserConf, ParserInput
+
+DATA_DIR = os.path.join(os.path.dirname(__file__), "../../../data")
+
+def load_path(filename):
+    return Path(os.path.join(DATA_DIR, filename))
+
+def test_basic_md_headings():
+    parser = MarkdownParser(ParserConf(language="markdown"))
+    input_ = ParserInput(file_path=load_path("basic.md"), file_info={})
+    result = parser.parse(input_)
+    assert [h["level"] for h in result.headings] == [1, 2]
+    assert [h["title"] for h in result.headings] == ["Título 1", "Subtítulo"]
+    assert result.links == []
+
+    assert result.code_blocks == 0
+
+def test_with_comments_md_comments_and_todos_fixmes():
+    parser = MarkdownParser(ParserConf(language="markdown"))
+    input_ = ParserInput(file_path=load_path("with_comments.md"), file_info={})
+    result = parser.parse(input_)
+    # Los comentarios extraídos deben coincidir con los del archivo
+    assert "Este es un comentario en markdown" in result.todos_fixmes or "TODO: Completar sección" in result.todos_fixmes or "FIXME: Revisar formato" in result.todos_fixmes
+    # Testea también single_comments_count y blank_lines
+    assert result.single_comments_count == 3
+    # TODO y FIXME separados:
+    assert "TODO: Completar sección" in result.todos_fixmes
+    assert "FIXME: Revisar formato" in result.todos_fixmes
+
+def test_with_comments_md_headings_links_codeblocks():
+    parser = MarkdownParser(ParserConf(language="markdown"))
+    input_ = ParserInput(file_path=load_path("with_comments.md"), file_info={})
+    result = parser.parse(input_)
+    
+    assert any(h["level"] == 1 and h["title"] == "Título" for h in result.headings)
+    assert result.links == []
+    assert result.code_blocks == 1
+
+def test_edge_cases_md():
+    parser = MarkdownParser(ParserConf(language="markdown"))
+    input_ = ParserInput(file_path=load_path("edge_cases.md"), file_info={})
+    result = parser.parse(input_)
+    # Headings y links
+    assert result.headings == []
+
+    assert result.links == [{"text": "OpenAI", "url": "https://openai.com"}]
+    # Code blocks: hay un bloque ```
+    
+    assert result.code_blocks == 1
+    # La preview incluye el comienzo del texto
+    assert "🎉" in result.content_preview
+    assert result.blank_lines >= 0  # Según el archivo
+
+def test_edge_cases_md_in_line_comment():
+    parser = MarkdownParser(ParserConf(language="markdown"))
+    input_ = ParserInput(file_path=load_path("edge_cases.md"), file_info={})
+    result = parser.parse(input_)
+    # Busca el comentario en línea (no es HTML, así que según el extractor, puede que no lo detecte)
+    assert "Comentario en línea" not in result.todos_fixmes  # Solo se detectan <!-- ... -->
+
+def test_blank_lines_basic_md():
+    parser = MarkdownParser(ParserConf(language="markdown"))
+    input_ = ParserInput(file_path=load_path("basic.md"), file_info={})
+    result = parser.parse(input_)
+    assert result.blank_lines >= 1  # Según el contenido
+
+def test_no_comments_basic_md():
+    parser = MarkdownParser(ParserConf(language="markdown"))
+    input_ = ParserInput(file_path=load_path("basic.md"), file_info={})
+    result = parser.parse(input_)
+    assert result.single_comments_count == 0
+    assert result.comments_count == 0
+
+
+
+================================================================================
+FILE: tests/unit/adapters/test_collector.py
+================================================================================
+
+import pytest
+from repogpt.adapters.collector.simple_collector import SimpleCollector
+from repogpt.models import AnalysisConf
+
+def write(path, content=""):
+    path.write_text(content, encoding="utf-8")
+
+def test_collect_basic(tmp_path):
+    # Setup: crea estructura de directorios y archivos
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    (repo / "main.py").write_text("print('hi')")  # válido
+    (repo / "README.md").write_text("# Hola")      # válido
+    (repo / "big.bin").write_bytes(b"\x00" * 10)   # binario, debe saltarse
+    (repo / "test_utils.py").write_text("pass")    # test file
+    (repo / "script.sh").write_text("#!/bin/bash") # no debe incluirse
+    # crea subdir con "test" en el path
+    (repo / "tests").mkdir()
+    (repo / "tests" / "should_skip.py").write_text("x=1")
+
+    conf = AnalysisConf(repo_path=repo, include_tests=False)
+    col = SimpleCollector()
+    result = col.collect(conf)
+    # Debe encontrar main.py y README.md
+    files = {f.name for f in result.files}
+    skipped = {f.name for f in result.skipped}
+
+    print(result)
+    assert "main.py" in files
+    assert "README.md" in files
+    assert "test_utils.py" in skipped
+    assert "should_skip.py" in skipped or "should_skip.py" not in files
+    assert "big.bin" in skipped
+    assert "script.sh" not in files
+
+def test_collect_includes_tests(tmp_path):
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    (repo / "test_this.py").write_text("pass")
+    (repo / "main.py").write_text("pass")
+    conf = AnalysisConf(repo_path=repo, include_tests=True)
+    col = SimpleCollector()
+    result = col.collect(conf)
+    files = {f.name for f in result.files}
+    assert "test_this.py" in files
+    assert "main.py" in files
+
+def test_collect_max_file_size(tmp_path):
+    repo = tmp_path
+    bigfile = repo / "big.py"
+    bigfile.write_text("x" * 2_000_001)
+    conf = AnalysisConf(repo_path=repo, max_file_size=2_000_000)
+    col = SimpleCollector()
+    result = col.collect(conf)
+    assert "big.py" in {f.name for f in result.skipped}
+
+
+
+================================================================================
+FILE: tests/unit/models.py
+================================================================================
+
+
+
+
+================================================================================
+FILE: tests/unit/utils/test_text_processing.py
+================================================================================
+
+import os
+from repogpt.utils.text_processing import count_blank_lines, extract_comments, extract_todos_fixmes
+
+DATA_DIR = os.path.join(os.path.dirname(__file__), "../../data")
+
+def load_file(name):
+    with open(os.path.join(DATA_DIR, name), encoding="utf-8") as f:
+        return f.read()
+
+# ---------- BASIC PYTHON ----------
+def test_blank_lines_basic_py():
+    text = load_file("basic.py")
+    assert count_blank_lines(text) == 1
+
+def test_comments_basic_py():
+    text = load_file("basic.py")
+    comments = extract_comments(text, language="python")
+    assert comments == []
+
+# ---------- WITH COMMENTS MARKDOWN ----------
+def test_comments_with_comments_md():
+    text = load_file("with_comments.md")
+    comments = extract_comments(text, language="markdown")
+    assert comments == [
+        "Este es un comentario en markdown",
+        "TODO: Completar sección",
+        "FIXME: Revisar formato"
+    ]
+    todos, fixmes = extract_todos_fixmes(comments)
+    assert todos == ["TODO: Completar sección"]
+    assert fixmes == ["FIXME: Revisar formato"]
+
+# ---------- EDGE CASES PY ----------
+def test_comments_edge_cases_py():
+    text = load_file("edge_cases.py")
+    comments = extract_comments(text, language="python")
+    assert "Este es un comentario normal" in comments
+    assert "TODO: pendiente de implementar" in comments
+    todos, fixmes = extract_todos_fixmes(comments)
+    assert "TODO: pendiente de implementar" in todos
+
+# ---------- DOCSTRING EXAMPLES PY ----------
+def test_docstring_examples():
+    text = load_file("docstring_examples.py")
+    comments = extract_comments(text, language="python")
+    # Si hay comentarios además de docstrings
+    assert "Comentario entre docstring y código" in comments or comments == []
+    todos, fixmes = extract_todos_fixmes(comments)
+    # Si pusiste TODO/FIXME en comentarios, aquí se chequean
+    # assert todos == [...]
+
+# ---------- BASIC MARKDOWN ----------
+def test_blank_lines_basic_md():
+    text = load_file("basic.md")
+    assert count_blank_lines(text) >= 0 
+    
+def test_comments_basic_md():
+    text = load_file("basic.md")
+    comments = extract_comments(text, language="markdown")
+    assert comments == []
+
+# Añadir tests de regresión?
+def test_comments_edge_cases_py():
+    text = load_file("edge_cases_comments.py")
+    comments = extract_comments(text, language="python")
+    assert "Este es un comentario con acento: áéíóú" in comments
+    assert "Comentario con emoji 😊" in comments
+    assert "# Esto tampoco es comentario" not in comments
+    assert "TODO: tarea pendiente λ" in comments
+    assert "Comentario sin espacio tras hash" in comments
+    assert "Comentario con indentación" in comments
+    assert "FIXME — revisar símbolos matemáticos: ∑, π, √" in comments
+    todos, fixmes = extract_todos_fixmes(comments)
+    assert any("λ" in todo for todo in todos)
+    assert any("símbolos matemáticos" in fix for fix in fixmes)
+
+def test_blank_lines_edge_cases():
+    text = load_file("edge_cases_blanklines.py")
+    assert count_blank_lines(text) == 5
+
+def test_comments_edge_cases_md():
+    text = load_file("edge_cases.md")
+    comments = extract_comments(text, language="markdown")
+    assert any("emoji" in c or "🎉" in c for c in comments)
+    assert any("caracteres raros" in c for c in comments)
+    assert "ComentarioSinEspacios" in "".join(comments)
+

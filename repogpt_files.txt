@@ -1,0 +1,1135 @@
+
+================================================================================
+FILE: src/repogpt/__init__.py
+================================================================================
+
+# repogpt/__init__.py
+
+# Versión del paquete
+
+__version__ = "0.8.3"
+
+# Opcional: importar elementos clave para acceso directo
+# from .analyzer import RepositoryAnalyzer
+# from .exceptions import RepoGPTException
+
+# Configurar un logger NullHandler por defecto para evitar mensajes si la app
+# que usa la librería no configura logging.
+import logging
+
+logging.getLogger(__name__).addHandler(logging.NullHandler())
+
+
+
+================================================================================
+FILE: src/repogpt/adapters/collector/simple_collector.py
+================================================================================
+
+from pathlib import Path
+
+import pathspec
+import structlog
+
+from repogpt.adapters.parser import parsers
+from repogpt.core.ports import CollectorPort
+from repogpt.models import AnalysisConf, CollectionResult
+from repogpt.utils.file_utils import is_likely_binary
+
+# Carpeta/archivo siempre ignorados
+DEFAULT_IGNORES: set[str] = {
+    ".git",
+    ".hg",
+    ".svn",
+    "__pycache__",
+    ".venv",
+    "venv",
+    "env",
+    ".mypy_cache",
+    ".pytest_cache",
+    "dist",
+    "build",
+    "node_modules",
+    ".tox",
+    ".DS_Store",
+    ".idea",
+    ".vscode",
+}
+
+
+def load_pathspec(repo_root: Path) -> pathspec.PathSpec | None:
+    ignore_file = repo_root / ".repogptignore"
+    if ignore_file.exists():
+        with ignore_file.open("r") as f:
+            lines = [
+                line for line in f if line.strip() and not line.strip().startswith("#")
+            ]
+        return pathspec.PathSpec.from_lines("gitwildmatch", lines)
+    return None
+
+
+def should_ignore(
+    p: Path, repo_root: Path, spec: pathspec.PathSpec | None = None
+) -> bool:
+    rel = p.relative_to(repo_root)
+    # Hardcoded ignores: cualquier parte del path
+    if any(part in DEFAULT_IGNORES for part in rel.parts):
+        return True
+    # Archivos/carpetas ocultas (excepto el root)
+    if any(part.startswith(".") and part != "." for part in rel.parts):
+        return True
+    # Symlinks (no seguimos)
+    if p.is_symlink():
+        return True
+    # pathspec patterns (si .repogptignore existe)
+    if spec and spec.match_file(str(rel)):
+        return True
+    return False
+
+
+class SimpleCollector(CollectorPort):
+    def collect(self, conf: AnalysisConf) -> CollectionResult:
+
+        repo_root = conf.repo_path.resolve()
+        # ---------- sanity checks ----------
+        if not repo_root.exists():
+            raise FileNotFoundError(f"Repository path '{repo_root}' does not exist")
+        if not repo_root.is_dir():
+            raise NotADirectoryError(
+                f"Repository path '{repo_root}' is not a directory"
+            )
+
+        allowed_exts = set(conf.languages or parsers.keys())
+        spec = load_pathspec(repo_root)
+        files: list[Path] = []
+        skipped: list[Path] = []
+        slogger = structlog.get_logger(__name__)
+        for p in repo_root.rglob("*"):
+            # Ignorar directorios, symlinks y patrones .repogptignore
+            if should_ignore(p, repo_root, spec):
+                slogger.debug("skip", path=str(p), reason="ignored")
+                skipped.append(p)
+                continue
+            if not p.is_file():
+                continue
+            # Solo extensiones soportadas (puedes cambiar según tus parsers)
+            allowed_exts = set(
+                conf.languages or parsers.keys()
+            )  # parsers importado abajo
+            if p.suffix.lstrip(".").lower() not in allowed_exts:
+                slogger.debug("skip", path=str(p), reason="ignored")
+                skipped.append(p)
+                continue
+            # Excluye tests si así lo pide la conf
+            if not conf.include_tests:
+                filename = p.parts[-1]
+                if "tests" in p.parts or filename.startswith(("test_", "test-")):
+                    slogger.debug("skip", path=str(p), reason="ignored")
+                    skipped.append(p)
+                    continue
+
+            # Filtrar por tamaño y binarios
+            if p.stat().st_size > conf.max_file_size or is_likely_binary(p):
+                slogger.debug("skip", path=str(p), reason="ignored")
+                skipped.append(p)
+                continue
+            files.append(p)
+        return CollectionResult(files=files, skipped=skipped, types=None)
+
+
+
+================================================================================
+FILE: src/repogpt/adapters/parser/__init__.py
+================================================================================
+
+"""Registro global de parsers soportados."""
+
+from repogpt.adapters.parser.md_parser import MarkdownParser
+from repogpt.adapters.parser.py_parser import PythonParser
+
+parsers = {
+    "py": PythonParser(),
+    "md": MarkdownParser(),
+}
+
+
+
+================================================================================
+FILE: src/repogpt/adapters/parser/md_parser.py
+================================================================================
+
+# repogpt/adapters/parser/md_parser.py
+import re
+from uuid import uuid4
+
+from repogpt.models import CodeNode, ParserInput, ParserInterface
+from repogpt.utils.text_processing import count_blank_lines, extract_comments
+
+
+class MarkdownParser(ParserInterface):
+    """Parser para archivos Markdown, construye un árbol de CodeNode."""
+
+    HEADING_RE = re.compile(r"^(#+)\s+(.*)$", re.MULTILINE)
+    LINK_RE = re.compile(r"\[([^\]]+)\]\(([^)]+)\)")
+    FENCE_RE = re.compile(r"^```", re.MULTILINE)
+
+    def __init__(self) -> None:
+        """Initialize the Markdown parser."""
+        pass
+
+    def parse(self, input: ParserInput) -> CodeNode:
+        """
+        Parse a Markdown file and build a CodeNode tree.
+
+        Args:
+            input: ParserInput containing the file path and info
+
+        Returns:
+            CodeNode: Root node of the parsed tree
+        """
+        path = input.file_path
+        content = path.read_text(encoding="utf-8", errors="replace")
+        lines = content.splitlines()
+        total_lines = len(lines)
+
+        root = CodeNode(
+            id=str(uuid4()),
+            type="Module",
+            name=path.stem,
+            language="markdown",
+            path=str(path),
+            start_line=1,
+            end_line=total_lines,
+            metrics={
+                "blank_lines": count_blank_lines(content),
+                "lines_of_code": len([line for line in lines if line.strip()]),
+            },
+        )
+
+        # 1. Headings como nodos hijos
+        headings = [
+            {
+                "level": len(m.group(1)),
+                "title": m.group(2).strip(),
+                "start_line": content.count("\n", 0, m.start()) + 1,
+            }
+            for m in self.HEADING_RE.finditer(content)
+        ]
+        for h in headings:
+            root.children.append(
+                CodeNode(
+                    id=str(uuid4()),
+                    type="Heading",
+                    name=str(h["title"]),
+                    language="markdown",
+                    path=root.path,
+                    start_line=int(h["start_line"]),
+                    end_line=int(
+                        h["start_line"]
+                    ),  # No sabemos el rango, solo el inicio
+                    parent_id=root.id,
+                    metrics={"level": h["level"]},
+                )
+            )
+
+        # 2. Links como dependencias
+        for m in self.LINK_RE.finditer(content):
+            root.dependencies.append({"text": m.group(1), "url": m.group(2)})
+
+        # 3. Code blocks como hijos anónimos
+        code_blocks = []
+        for m in self.FENCE_RE.finditer(content):
+            code_blocks.append(content.count("\n", 0, m.start()) + 1)
+        # Group code blocks by pairs (start, end)
+        for i in range(0, len(code_blocks), 2):
+            try:
+                start = code_blocks[i]
+                end = code_blocks[i + 1]
+                root.children.append(
+                    CodeNode(
+                        id=str(uuid4()),
+                        type="CodeBlock",
+                        name=None,
+                        language="markdown",
+                        path=root.path,
+                        start_line=start,
+                        end_line=end,
+                        parent_id=root.id,
+                    )
+                )
+            except IndexError:
+                # Unmatched ```
+                continue
+
+        # 4. Comentarios HTML
+        comments = extract_comments(content, language="markdown")
+        for c in comments:
+            root.comments.append(c)
+            # Extra tags tipo TODO/FIXME
+            text = c["text"].lower()
+            if "todo" in text:
+                root.tags.append("TODO")
+            if "fixme" in text:
+                root.tags.append("FIXME")
+
+        return root
+
+
+
+================================================================================
+FILE: src/repogpt/adapters/parser/py_parser.py
+================================================================================
+
+# repogpt/adapters/parser/py_parser.py
+
+import ast
+from typing import Any
+from uuid import uuid4
+
+from repogpt.models import CodeNode, ParserInput, ParserInterface
+from repogpt.utils.text_processing import (
+    count_blank_lines,
+    extract_comments,
+)
+
+
+class PythonParser(ParserInterface):
+    def __init__(self) -> None:
+        pass
+
+    def parse(self, input: ParserInput) -> CodeNode:
+        path = input.file_path
+        content = path.read_text(encoding="utf-8", errors="replace")
+        tree = ast.parse(content, filename=str(path))
+
+        # --- Root node (Module) ---
+        root = CodeNode(
+            id=str(uuid4()),
+            type="Module",
+            name=path.stem,
+            language="python",
+            path=str(path),
+            start_line=1,
+            end_line=content.count("\n") + 1,
+            metrics={
+                "blank_lines": count_blank_lines(content),
+                "lines_of_code": len(
+                    [line for line in content.splitlines() if line.strip()]
+                ),
+            },
+        )
+
+        # --- Extract comments (flat, will associate later)
+        comments = extract_comments(content, language="python")
+
+        # --- Build CodeNode tree ---
+        self._visit(tree, parent_node=root)
+
+        # --- Associate comments ---
+        self._associate_comments(root, comments)
+
+        return root
+
+    def _visit(self, node: ast.AST, parent_node: CodeNode) -> None:
+        """Recursively visit AST nodes and build CodeNode instances."""
+        for child in ast.iter_child_nodes(node):
+            cn = None
+            if isinstance(
+                child, ast.Import | ast.ImportFrom
+            ):  # <-- nuevo (Python 3.10+)
+                cn = self._make_import_node(child, parent_node)
+            elif isinstance(child, ast.ClassDef):
+                cn = self._make_class_node(child, parent_node)
+            elif isinstance(child, ast.FunctionDef | ast.AsyncFunctionDef):
+                cn = self._make_function_node(child, parent_node)
+
+            if cn:
+                parent_node.children.append(cn)
+                self._visit(child, parent_node=cn)
+            else:
+                # Sigue recorriendo (por si hay anidados, ej: funciones en funciones)
+                self._visit(child, parent_node=parent_node)
+
+    def _make_import_node(
+        self, node: ast.Import | ast.ImportFrom, parent: CodeNode
+    ) -> CodeNode:
+        imports = [{"name": a.name, "type": "external"} for a in node.names]
+        return CodeNode(
+            id=str(uuid4()),
+            type="Import",
+            name=None,
+            path=parent.path,
+            parent_id=parent.id,
+            start_line=node.lineno,
+            end_line=getattr(node, "end_lineno", node.lineno),
+            dependencies=imports,
+            language=parent.language,
+        )
+
+    def _make_class_node(self, node: ast.ClassDef, parent: CodeNode) -> CodeNode:
+        return CodeNode(
+            id=str(uuid4()),
+            type="Class",
+            name=node.name,
+            path=parent.path,
+            parent_id=parent.id,
+            start_line=node.lineno,
+            end_line=getattr(node, "end_lineno", node.lineno),
+            docstring=ast.get_docstring(node),
+            language=parent.language,
+        )
+
+    def _make_function_node(
+        self, node: ast.FunctionDef | ast.AsyncFunctionDef, parent: CodeNode
+    ) -> CodeNode:
+        return CodeNode(
+            id=str(uuid4()),
+            type="Function",
+            name=node.name,
+            path=parent.path,
+            parent_id=parent.id,
+            start_line=node.lineno,
+            end_line=getattr(node, "end_lineno", node.lineno),
+            docstring=ast.get_docstring(node),
+            language=parent.language,
+        )
+
+    def _associate_comments(
+        self, root: CodeNode, comments: list[dict[str, Any]]
+    ) -> None:
+        """Attach comments to the smallest containing CodeNode by line range."""
+
+        def walk(node: CodeNode, comment: dict[str, Any]) -> CodeNode | None:
+            if (
+                node.start_line
+                and node.end_line
+                and node.start_line <= comment["line"] <= node.end_line
+            ):
+                for child in node.children:
+                    found = walk(child, comment)
+                    if found:
+                        return found
+                return node
+            return None
+
+        for comment in comments:
+            owner = walk(root, comment) or root
+            owner.comments.append(comment)
+
+    def _alias(self, a: ast.alias) -> str:
+        return f"{a.name} as {a.asname}" if a.asname else a.name
+
+
+
+================================================================================
+FILE: src/repogpt/adapters/parser/ts_parser.py
+================================================================================
+
+
+
+
+================================================================================
+FILE: src/repogpt/adapters/pipeline/simple_pipeline.py
+================================================================================
+
+"""Pipeline: parser + (opcional) processor; captura errores."""
+
+from __future__ import annotations
+
+import traceback
+from pathlib import Path
+from typing import Protocol, TypeVar
+
+import structlog
+
+from repogpt.core.ports import PipelinePort
+from repogpt.models import (
+    AnalysisConf,
+    CodeNode,
+    ParserInput,
+    PipelineResult,
+)
+from repogpt.utils.file_utils import calculate_file_hash
+
+logger = structlog.get_logger(__name__)
+
+T = TypeVar("T", bound=CodeNode)
+
+
+class Parser(Protocol):
+    def parse(self, input: ParserInput) -> CodeNode: ...
+
+
+class Processor(Protocol):
+    def __call__(self, node: T) -> T: ...
+
+
+class SimplePipeline(PipelinePort):
+    def __init__(
+        self,
+        parsers: dict[str, Parser],
+        processors: dict[str, Processor] | None = None,
+    ) -> None:
+        self.parsers = parsers
+        self.processors = processors or {}
+
+    # ------------------------------------------------------------------
+    def process(self, file: Path, conf: AnalysisConf) -> PipelineResult:  # noqa: D401
+        ext = file.suffix.lower().lstrip(".")
+        file_info = {
+            "size": file.stat().st_size,
+            "sha256": calculate_file_hash(file),
+        }
+
+        parser = self.parsers.get(ext)
+        if parser is None:
+            return PipelineResult(
+                path=file,
+                language=ext,
+                root=None,
+                error="no parser",
+                file_info=file_info,
+            )
+
+        try:
+            root = parser.parse(ParserInput(file, file_info))
+            for processor in self.processors.values():
+                root = processor(root)
+            return PipelineResult(
+                path=file, language=ext, root=root, file_info=file_info
+            )
+        except Exception as exc:  # noqa: BLE001 – queremos capturarlo todo
+            tb_short = "\n".join(
+                traceback.format_exception_only(type(exc), exc)
+            ).strip()
+            logger.exception("pipeline error", path=file, error=tb_short)
+            return PipelineResult(
+                path=file, language=ext, root=None, error=tb_short, file_info=file_info
+            )
+
+
+
+================================================================================
+FILE: src/repogpt/adapters/publisher/simple_publisher.py
+================================================================================
+
+"""Publisher que soporta JSON, NDJSON y STDOUT."""
+
+from __future__ import annotations
+
+import dataclasses
+import json
+import os
+import sys
+from collections.abc import Generator
+from typing import Any
+
+import structlog
+
+from repogpt.core.ports import PublisherPort
+from repogpt.models import AnalysisConf, PipelineResult
+from repogpt.utils.tree_utils import flatten_tree
+
+logger = structlog.get_logger(__name__)
+
+
+class SimplePublisher(PublisherPort):
+    def _yield_serialized_nodes(
+        self, r: PipelineResult, conf: AnalysisConf
+    ) -> Generator[dict[str, Any], None, None]:
+        """Genera los objetos listos para json.dumps según flatten_kind."""
+        if r.root is None:
+            return  # fail handled elsewhere
+
+        root = r.root
+        if conf.flatten_kind == "node":
+            nodes = flatten_tree(root)
+        else:  # file
+            nodes = [dataclasses.asdict(root)]
+
+        for node in nodes:
+            node.update(
+                {
+                    "path": str(r.path),
+                    "lang": r.language,
+                    **r.file_info,
+                }
+            )
+            yield node
+
+    # ------------------------------------------------------------------
+    def publish(
+        self, results: list[PipelineResult], conf: AnalysisConf
+    ) -> None:  # noqa: D401
+        data_iterables: list[Generator[dict[str, Any], None, None]] = []
+        failures = []
+
+        for res in results:
+            if res.root is None:
+                failures.append({"path": str(res.path), "error": res.error})
+                continue
+            data_iterables.append(self._yield_serialized_nodes(res, conf))
+
+        def line_iter() -> Generator[dict[str, Any], None, None]:
+            for it in data_iterables:
+                yield from it
+
+        # Decide sink ---------------------------------------------------
+        sink_stdout = (
+            conf.to_stdout or conf.output is None and conf.output_format == "ndjson"
+        )
+        if sink_stdout:
+            self._write_stream(line_iter(), conf)
+        else:
+            output_path = conf.output or os.path.join(os.getcwd(), "analysis.json")
+            with open(output_path, "w", encoding="utf-8") as fh:
+                if conf.output_format == "json":
+                    json.dump(list(line_iter()), fh, ensure_ascii=False, indent=2)
+                else:  # ndjson
+                    for obj in line_iter():
+                        fh.write(json.dumps(obj, ensure_ascii=False) + "\n")
+            logger.info(
+                "analysis saved",
+                path=output_path,
+                ok=len(results) - len(failures),
+                fails=len(failures),
+            )
+
+        if failures:
+            print("Failed files:", file=sys.stderr)
+            for f in failures:
+                logger.error("parse error", **f)
+
+    # ------------------------------------------------------------------
+    @staticmethod
+    def _write_stream(
+        objs: Generator[dict[str, Any], None, None], conf: AnalysisConf
+    ) -> None:
+        """Escribe a stdout según formato."""
+        stream = sys.stdout
+        if conf.output_format == "json":
+            json.dump(list(objs), stream, ensure_ascii=False, indent=2)
+            stream.write("\n")
+        else:  # ndjson
+            for obj in objs:
+                stream.write(json.dumps(obj, ensure_ascii=False) + "\n")
+
+
+
+================================================================================
+FILE: src/repogpt/app/cli.py
+================================================================================
+
+from __future__ import annotations
+
+import argparse
+import logging
+import sys
+from pathlib import Path
+
+import structlog
+
+from repogpt.adapters.collector.simple_collector import SimpleCollector
+from repogpt.adapters.parser import parsers
+from repogpt.adapters.pipeline.simple_pipeline import SimplePipeline
+from repogpt.adapters.publisher.simple_publisher import SimplePublisher
+from repogpt.core.service import CodeRepoAnalysisService
+from repogpt.models import AnalysisConf
+
+LEVELS: dict[str, int] = {"DEBUG": logging.DEBUG, "INFO": logging.INFO}
+
+
+def _configure_logging(level: str) -> None:
+    logging.basicConfig(level=LEVELS[level], format="%(message)s", stream=sys.stderr)
+    structlog.configure(
+        wrapper_class=structlog.make_filtering_bound_logger(LEVELS[level]),
+        logger_factory=structlog.PrintLoggerFactory(file=sys.stderr),
+    )
+
+
+def main() -> int:  # noqa: D401
+    parser = argparse.ArgumentParser(
+        description="Analyze a code repository and output structured summaries.",
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    )
+    parser.add_argument("repo_path")
+    parser.add_argument("--include-tests", action="store_true")
+    parser.add_argument("--flatten", choices=["node", "file"], default="node")
+    parser.add_argument("--format", choices=["json", "ndjson"], default="json")
+    parser.add_argument("--stdout", action="store_true")
+    parser.add_argument("-o", "--output")
+    parser.add_argument("--languages")
+    # phase‑3 flags
+    parser.add_argument("--log-level", choices=["INFO", "DEBUG"], default="INFO")
+    parser.add_argument("--fail-fast", action="store_true")
+
+    args = parser.parse_args()
+
+    _configure_logging(args.log_level)
+    log = structlog.get_logger()
+
+    langs = (
+        [s.strip().lower() for s in args.languages.split(",")]
+        if args.languages
+        else None
+    )
+    to_stdout = args.stdout or (
+        args.output and Path(args.output).as_posix() == "/dev/stdout"
+    )
+
+    conf = AnalysisConf(
+        repo_path=Path(args.repo_path).resolve(),
+        include_tests=args.include_tests,
+        output=None if to_stdout else Path(args.output) if args.output else None,
+        flatten_kind=args.flatten,
+        output_format=args.format,
+        to_stdout=to_stdout,
+        languages=langs,
+        log_level=args.log_level,
+        fail_fast=args.fail_fast,
+    )
+
+    log.info("starting run", repo=str(conf.repo_path), format=conf.output_format)
+
+    CodeRepoAnalysisService(
+        collector=SimpleCollector(),
+        pipeline=SimplePipeline(parsers=parsers, processors={}),
+        publisher=SimplePublisher(),
+    ).run(runtime_conf=conf)
+
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
+
+
+
+================================================================================
+FILE: src/repogpt/core/ports.py
+================================================================================
+
+"""Ports: firmas ajustadas pero conceptualmente iguales."""
+
+from __future__ import annotations
+
+from pathlib import Path
+from typing import Protocol
+
+from repogpt.models import AnalysisConf, CollectionResult, PipelineResult
+
+
+class CollectorPort(Protocol):
+    def collect(self, conf: AnalysisConf) -> CollectionResult:  # noqa: D401
+        ...
+
+
+class PipelinePort(Protocol):
+    def process(self, file: Path, conf: AnalysisConf) -> PipelineResult:  # noqa: D401
+        ...
+
+
+class PublisherPort(Protocol):
+    def publish(
+        self, results: list[PipelineResult], conf: AnalysisConf
+    ) -> None:  # noqa: D401
+        ...
+
+
+
+================================================================================
+FILE: src/repogpt/core/service.py
+================================================================================
+
+from __future__ import annotations
+
+import sys
+
+import structlog
+
+from repogpt.core.ports import CollectorPort, PipelinePort, PublisherPort
+from repogpt.models import AnalysisConf
+
+# === Service ===
+
+
+class CodeRepoAnalysisService:
+    def __init__(
+        self, collector: CollectorPort, pipeline: PipelinePort, publisher: PublisherPort
+    ):
+        self.collector = collector
+        self.pipeline = pipeline
+        self.publisher = publisher
+        self.log = structlog.get_logger(__name__)
+
+    def run(self, runtime_conf: AnalysisConf) -> None:
+        col = self.collector.collect(runtime_conf)
+        results = [self.pipeline.process(p, runtime_conf) for p in col.files]
+
+        failed = [r for r in results if r.root is None]
+        ok = len(results) - len(failed)
+        self.log.info("pipeline finished", ok=ok, failed=len(failed))
+
+        if failed and runtime_conf.fail_fast:
+            self.log.error("aborting — fail-fast", first_error=failed[0].error)
+            sys.exit(1)
+
+        self.publisher.publish(results, runtime_conf)
+        if runtime_conf.fail_fast:
+            if failed or ok == 0:  # aborta si hay fallos o nada procesado
+                self.log.error("aborting — fail-fast", first_error=failed[0].error)
+                sys.exit(1)
+
+
+
+================================================================================
+FILE: src/repogpt/exceptions.py
+================================================================================
+
+# repogpt/exceptions.py
+
+
+class RepoGPTException(Exception):
+    """Clase base para excepciones específicas de RepoGPT."""
+
+    pass
+
+
+class ConfigurationError(RepoGPTException):
+    """Error relacionado con la configuración del análisis."""
+
+    pass
+
+
+class ParsingError(RepoGPTException):
+    """Error durante la fase de parsing de un archivo."""
+
+    def __init__(
+        self,
+        message: str,
+        file_path: str | None = None,
+        parser_name: str | None = None,
+    ) -> None:
+        self.file_path = file_path
+        self.parser_name = parser_name
+        detail = f"Parser: {parser_name or 'N/A'}, File: {file_path or 'N/A'}"
+        full_message = f"{message} ({detail})"
+        super().__init__(full_message)
+
+
+class AnalysisError(RepoGPTException):
+    """Error durante la fase principal de análisis del repositorio."""
+
+    pass
+
+
+class ReportingError(RepoGPTException):
+    """Error durante la generación del reporte."""
+
+    pass
+
+
+
+================================================================================
+FILE: src/repogpt/models.py
+================================================================================
+
+from __future__ import annotations
+
+from dataclasses import dataclass, field
+from pathlib import Path
+from typing import Any, Protocol
+
+
+@dataclass
+class AnalysisConf:
+    repo_path: Path
+    include_tests: bool = False
+    max_file_size: int = 2_000_000
+    languages: list[str] | None = None
+    output: Path | None = None
+    flatten_kind: str = "node"
+    output_format: str = "json"
+    to_stdout: bool = False
+    # --- phase‑3 ---
+    log_level: str = "INFO"  # DEBUG | INFO
+    fail_fast: bool = False  # abort on first parser error
+
+
+@dataclass
+class ParserInput:
+    file_path: Path
+    file_info: dict[str, Any]
+
+
+@dataclass
+class CodeNode:
+    id: str
+    type: str
+    name: str | None = None
+    language: str | None = None
+    path: str | None = None
+    start_line: int | None = None
+    end_line: int | None = None
+    docstring: str | None = None
+    comments: list[dict[str, Any]] = field(default_factory=list)
+    tags: list[str] = field(default_factory=list)
+    dependencies: list[dict[str, Any]] = field(default_factory=list)
+    parent_id: str | None = None
+    children: list[CodeNode] = field(default_factory=list)
+    metrics: dict[str, Any] = field(default_factory=dict)
+
+    def __repr__(self) -> str:  # pragma: no cover
+        return f"<{self.type}:{self.name} @{self.start_line}-{self.end_line}>"
+
+
+@dataclass
+class PipelineResult:
+    path: Path
+    language: str
+    root: CodeNode | None
+    error: str | None = None
+    file_info: dict[str, Any] = field(default_factory=dict)
+
+
+@dataclass
+class CollectionResult:
+    files: list[Path]
+    skipped: list[Path]
+    types: list[str] | None = None
+
+
+class ParserInterface(Protocol):
+    def parse(self, input: ParserInput) -> CodeNode: ...
+
+
+class ProcessorInterface(Protocol):
+    def process(self, root: CodeNode) -> CodeNode: ...
+
+
+
+================================================================================
+FILE: src/repogpt/utils/file_utils.py
+================================================================================
+
+# repogpt/utils/file_utils.py
+
+import hashlib
+import logging
+from pathlib import Path
+
+logger = logging.getLogger(__name__)
+
+CHUNK_SIZE = 8192  # Leer archivos en bloques de 8KB para hashing
+
+
+def calculate_file_hash(file_path: Path, algorithm: str = "sha256") -> str | None:
+    """
+    Calcula el hash de un archivo usando el algoritmo especificado.
+
+    Args:
+        file_path: Ruta al archivo.
+        algorithm: Algoritmo de hash a usar (ej. 'sha256', 'md5').
+
+    Returns:
+        El hash en formato hexadecimal como string, o None si ocurre un error.
+    """
+    try:
+        hasher = hashlib.new(algorithm)
+        with file_path.open("rb") as f:
+            while chunk := f.read(CHUNK_SIZE):
+                hasher.update(chunk)
+        return hasher.hexdigest()
+    except FileNotFoundError:
+        logger.error("Archivo no encontrado al calcular hash: %s", file_path)
+    except PermissionError:
+        logger.error("Permiso denegado al calcular hash para: %s", file_path)
+    except OSError as e:
+        logger.error("Error de OS calculando hash para %s: %s", file_path, e)
+    except ValueError:
+        logger.error("Algoritmo de hash inválido: %s", algorithm)
+    except Exception as e:
+        logger.error(
+            "Error inesperado calculando hash para %s: %s", file_path, e, exc_info=True
+        )
+
+    return None
+
+
+def is_likely_binary(file_path: Path, check_bytes: int = 1024) -> bool:
+    """
+    Intenta determinar si un archivo es probablemente binario.
+
+    Actualmente usa una heurística simple: la presencia de un byte NULL
+    dentro de los primeros 'check_bytes'.
+
+    Args:
+        file_path: Ruta al archivo.
+        check_bytes: Número de bytes iniciales a revisar.
+
+    Returns:
+        True si el archivo parece binario, False en caso contrario o si hay error.
+    """
+    try:
+        with file_path.open("rb") as f:
+            chunk = f.read(check_bytes)
+            if b"\x00" in chunk:
+                logger.debug(
+                    "Detectado byte NULL en %s, marcando como binario.", file_path
+                )
+                return True
+            # Podríamos añadir más heurísticas aquí si fuera necesario
+            # Por ejemplo, buscar un alto porcentaje de caracteres no imprimibles.
+    except FileNotFoundError:
+        logger.warning(
+            "Archivo no encontrado al verificar si es binario: %s", file_path
+        )
+        return False  # No se puede determinar, asumir no binario por seguridad
+    except PermissionError:
+        logger.warning("Permiso denegado al verificar si es binario: %s", file_path)
+        return False  # Asumir no binario
+    except OSError as e:
+        logger.warning("Error de OS verificando si %s es binario: %s", file_path, e)
+        return False  # Asumir no binario
+    except Exception as e:
+        logger.warning(
+            "Error inesperado verificando si %s es binario: %s", file_path, e
+        )
+        return False  # Asumir no binario
+
+    logger.debug("%s no parece binario (basado en byte NULL).", file_path)
+    return False
+
+
+# Podrías añadir aquí otras utilidades relacionadas con archivos si las necesitas.
+
+
+
+================================================================================
+FILE: src/repogpt/utils/text_processing.py
+================================================================================
+
+# repogpt/utils/text_processing.py
+
+import io
+import re
+import tokenize
+from typing import Any
+
+
+def count_blank_lines(text: str) -> int:
+    """Cuenta líneas completamente en blanco."""
+    return sum(1 for line in text.splitlines() if not line.strip())
+
+
+def extract_comments(content: str, language: str = "python") -> list[dict[str, Any]]:
+    """
+    Extrae comentarios con línea para distintos lenguajes.
+
+    Devuelve: [{"text": ..., "line": ...}]
+    """
+    comments = []
+    if language == "python":
+        try:
+            tokens = tokenize.generate_tokens(io.StringIO(content).readline)
+            for toktype, tok, start, _, _ in tokens:
+                if toktype == tokenize.COMMENT:
+                    comments.append(
+                        {
+                            "text": tok.lstrip("# ").rstrip(),
+                            "line": start[0],
+                        }
+                    )
+        except Exception:
+            pass
+    elif language == "markdown":
+        # Busca <!-- ... --> comentarios HTML
+        for match in re.finditer(r"<!--(.*?)-->", content, re.DOTALL):
+            line = content.count("\n", 0, match.start()) + 1
+            comments.append(
+                {
+                    "text": match.group(1).strip(),
+                    "line": line,
+                }
+            )
+    # Puedes añadir más lenguajes aquí
+    return comments
+
+
+def extract_todos_fixmes(comments: list[dict[str, Any]]) -> tuple[list[str], list[str]]:
+    """
+    Extrae TODOs y FIXMEs de una lista de comentarios.
+
+    Args:
+        comments: Lista de diccionarios con comentarios extraídos
+
+    Returns:
+        Tupla con dos listas: (todos, fixmes)
+    """
+    todos: list[str] = []
+    fixmes: list[str] = []
+    for c in comments:
+        lower = c["text"].lower()
+        if "todo" in lower:
+            todos.append(c["text"])
+        if "fixme" in lower:
+            fixmes.append(c["text"])
+    return todos, fixmes
+
+
+
+================================================================================
+FILE: src/repogpt/utils/tree_utils.py
+================================================================================
+
+import dataclasses
+from collections.abc import Callable
+from typing import Any
+
+from repogpt.models import CodeNode
+
+
+def flatten_tree(root: CodeNode) -> list[dict[str, Any]]:
+    result: list[dict[str, Any]] = []
+
+    def walk(node: CodeNode) -> None:
+        d = dataclasses.asdict(node).copy()
+        d.pop("children")
+        result.append(d)
+        for child in node.children:
+            walk(child)
+
+    walk(root)
+    return result
+
+
+# === Query-tree utils
+
+
+def nodes_by_type(root: CodeNode, type_: str) -> list[dict[str, Any]]:
+    """Devuelve todos los nodos del árbol de un tipo dado."""
+    return [n for n in flatten_tree(root) if n["type"] == type_]
+
+
+def all_comments(root: CodeNode) -> list[dict[str, Any]]:
+    """Devuelve todos los comentarios de todos los nodos."""
+    return [c for n in flatten_tree(root) for c in n.get("comments", [])]
+
+
+def all_docstrings(root: CodeNode) -> list[str | None]:
+    """Devuelve todos los docstrings de los nodos (si existen)."""
+    return [n["docstring"] for n in flatten_tree(root) if n.get("docstring")]
+
+
+def all_tags(root: CodeNode) -> list[str]:
+    """Devuelve todos los tags de todos los nodos."""
+    return [tag for n in flatten_tree(root) for tag in n.get("tags", [])]
+
+
+# Avanzado: filtrado por predicado arbitrario
+def nodes_where(
+    root: CodeNode, predicate: Callable[[dict[str, Any]], bool]
+) -> list[dict[str, Any]]:
+    """Devuelve nodos que cumplen una condición arbitraria."""
+    return [n for n in flatten_tree(root) if predicate(n)]
+
+
