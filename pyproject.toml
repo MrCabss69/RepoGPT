@@ -1,0 +1,92 @@
+[project]
+name               = "repogpt"
+version            = "0.8.3"
+description        = "A consultable abstraction layer over any codebase: structured summaries and code intelligence for humans and LLM/RAG systems."
+readme             = "README.md"
+requires-python    = ">=3.10"
+keywords           = ["code-analysis", "LLM-integration", "RAG", "code-intelligence", "repo-gpt"]
+license            = { file = "LICENSE" }
+
+authors = [
+  { name = "MrCabss69", email = "p.p.cabezon@proton.me" },
+]
+maintainers = [
+  { name = "MrCabss69", email = "p.p.cabezon@proton.me" },
+]
+
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+  "Topic :: Software Development :: Code Generators",
+  "Topic :: Software Development :: Build Tools",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Operating System :: OS Independent"
+]
+
+dependencies = [
+  "pathspec>=0.12.1",    # .repogptignore support
+  "structlog>=24.1.0",   # structured logging
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=7.0", 
+  "ruff>=0.0.291", 
+  "mypy>=1.0",
+  "pre-commit>=2.20",
+  "black>=23.1.0",
+  "coverage>=6.4"
+]
+
+
+[project.urls]
+"Homepage"      = "https://github.com/MrCabss69/RepoGPT"
+"Repository"    = "https://github.com/MrCabss69/RepoGPT"
+"Bug Tracker"   = "https://github.com/MrCabss69/RepoGPT/issues"
+"Documentation" = "https://github.com/MrCabss69/RepoGPT#readme"
+
+[project.scripts]
+repogpt = "repogpt.app.cli:main"
+
+[build-system]
+requires    = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+
+[tool.setuptools]
+license-files = ["LICENSE", "LICENSE.md"]
+package-dir   = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+
+[tool.black]
+line-length = 88
+exclude = '''
+(
+    ^tests/data/bad\.py$
+    | ^tests/data/        # todos los data fakes si quieres
+)
+'''
+
+
+[tool.ruff]
+# misma selección que `black --target-version py311`
+line-length = 100
+target-version = "py311"
+select = ["E", "F", "I", "UP", "B", "C4", "DTZ"]
+exclude = ["src/repogpt/__init__.py"]
+
+[tool.mypy]
+strict = true
+python_version = "3.11"
+mypy_path = ["src"]
+ignore_missing_imports = true
+
+[tool.ruff.lint]
+ignore = ["I001"]
