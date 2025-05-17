@@ -149,3 +149,8 @@ repogpt.egg-info/
 tags
 !tests/data/*.md
 !tests/data/*.py
+
+
+repogpt_files.txt
+test_files.txt
+tests_files.txt
